@@ -13,6 +13,15 @@
 	<form>      
 	  <textarea id="prompt" name="prompt" rows="10" cols="120"></textarea>
 	  <br>
+	  <label for="text-input">Models:</label>
+	  <br>
+	<select id="models">
+	  <option value="text-davinci-003" selected="selected">text-davinci-003</option>
+	  <option value="text-curie-001">text-curie-001</option>
+	  <option value="text-babbage-001">text-babbage-001</option>
+	  <option value="text-ada-001">text-ada-001</option>
+	</select>
+	<br>
 	  <label for="text-input">Max tokens:</label>
 	  <br>
 	  <input type="text" id="max_tokens" name="text-input", style="width: 50;" value="1024">
@@ -39,6 +48,7 @@
         var userInput = document.getElementById("prompt").value;
 		var max_tokens = parseInt(document.getElementById("max_tokens").value);
 		var temperature = parseFloat(document.getElementById("temperature").value);
+		var model = parseFloat(document.getElementById("models").value);		 
         
         // Create a new XMLHttpRequest object
         var xhr = new XMLHttpRequest();
@@ -61,6 +71,7 @@
         // Send the request to the server
         xhr.send(JSON.stringify(
 		{
+		"model": model,
 		"prompt": userInput,
 		"max_tokens": max_tokens,
 		"temperature": temperature

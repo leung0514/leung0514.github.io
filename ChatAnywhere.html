@@ -13,10 +13,11 @@
 	<form>      
 	  <textarea id="prompt" name="prompt" rows="10" cols="120"></textarea>
 	  <br>
-	  <label for="text-input">Models:</label>
+	  <label for="text-input">GPT Models:</label>
 	  <br>
 	<select id="models">
 	  <option value="text-davinci-003" selected="selected">text-davinci-003</option>
+	  <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
 	  <option value="text-curie-001">text-curie-001</option>
 	  <option value="text-babbage-001">text-babbage-001</option>
 	  <option value="text-ada-001">text-ada-001</option>
@@ -34,7 +35,7 @@
 	  <button class="btn btn-secondary" type="button" onclick="submitData()">Submit</button>  
 	  
 	</form>
-    <h2>GPT-3 response:</h2>
+    <h2>GPT response:</h2>
     <textarea id="gpt3_response" rows="30" cols="120"></textarea>
 	<br>
 	<label for="text-input">Used token:</label>

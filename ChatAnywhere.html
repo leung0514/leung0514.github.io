@@ -1,84 +1,100 @@
-<html lang="en" data-bs-theme="light">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!DOCTYPE html>
+<html>
+<head>
     <title>ChatAnywhere</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-  </head>
-  <body>
-  <div class="container">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
- 
-    <h2>Prompt:</h2>
-	<form>      
-	  <textarea id="prompt" name="prompt" rows="10" cols="120"></textarea>
-	  <br>
-	  <label for="text-input">GPT Models:</label>
-	  <br>
-	<select id="models">
-	  <option value="text-davinci-003" selected="selected">text-davinci-003</option>
-	  <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
-	  <option value="text-curie-001">text-curie-001</option>
-	  <option value="text-babbage-001">text-babbage-001</option>
-	  <option value="text-ada-001">text-ada-001</option>
-	</select>
-	<br>
-	  <label for="text-input">Max tokens:</label>
-	  <br>
-	  <input type="text" id="max_tokens" name="text-input", style="width: 50;" value="1024">
-	  <br>
-	  <label for="text-input">Temperature:</label>
-	  <br>
-	  <input type="text" id="temperature" name="text-input", style="width: 50;" value="0.5">
-	  <br>
-	  <br>
-	  <button class="btn btn-secondary" type="button" onclick="submitData()">Submit</button>  
-	  
-	</form>
-    <h2>GPT response:</h2>
-    <textarea id="gpt3_response" rows="30" cols="120"></textarea>
-	<br>
-	<label for="text-input">Used token:</label>
-	<input type="text" id="tokens" name="text-input", style="width: 50;" readonly>
-	
-	<h2>Full response:</h2>
-	<textarea id="server_response" rows="30" cols="120"></textarea>
-    <script>
-      function submitData() {
-        // Get the user input from the text box
-        var userInput = document.getElementById("prompt").value;
-		var max_tokens = parseInt(document.getElementById("max_tokens").value);
-		var temperature = parseFloat(document.getElementById("temperature").value);
-		var model = document.getElementById("models").value;	 
-        
-        // Create a new XMLHttpRequest object
-        var xhr = new XMLHttpRequest();
-        
-        // Define the request parameters
-        xhr.open("POST", "https://chatanywhere.onrender.com/ChatAnywhere");
-        xhr.setRequestHeader("Content-Type", "application/json");
-        
-        // Define the request callback
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4 && xhr.status === 200) {
-            // Handle the response from the server
-            var response = JSON.parse(xhr.responseText);							
-            document.getElementById("gpt3_response").value = response.choices[0].text.trim();
-			document.getElementById("tokens").value = response.usage.total_tokens;			
-			document.getElementById("server_response").value = xhr.responseText;	
-          }
-        };
-        
-        // Send the request to the server
-        xhr.send(JSON.stringify(
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+	<style>	
+		body {
+			background-color: #333333;
+			color: #FFFFFF;
+		}
+		.container {
+			background-color: #222222;
+			border: none;
+		}
+		.message {
+			background-color: #444444;
+			color: #FFFFFF;
+			border-radius: 5px;
+			padding: 10px;
+			margin-bottom: 10px;
+			white-space: pre-wrap;
+		}
+		button[type="submit"] {
+			background-color: #444444;
+			color: #FFFFFF;
+			border: none;
+			border-radius: 5px;
+			padding: 10px;
+			margin-top: 10px;
+		}
+		.message-input {
+        font-size: 16px;
+        border-radius: 5px;
+        padding: 10px;
+        margin-top: 10px;
+        background-color: #444444;
+        color: #FFFFFF;
+        border: none;
+		resize: vertical;
+    	}
+		.message-input:focus {
+        outline: none;
+   	 	}
+		button[type="submit"]:focus {
+			outline: none;
+		}
+		.bi
 		{
-		"model": model,
-		"prompt": userInput,
-		"max_tokens": max_tokens,
-		"temperature": temperature
-		}));
-      }
-    </script>
+			font-size: 25px;
+		}		
+	</style>
+</head>
+<body>
+	<script>
+	var messages = [];
+	function displayMessages() 
+	{	
+		var messageHtml = '';
+		for (var i = 0; i < messages.length; i++) {
+			if(i % 2 == 0)
+			{
+				messageHtml += '<div class="message" style="text-align: right;"><p><i class="bi bi-emoji-sunglasses-fill"></i></p>' + messages[i] + '</div>';
+			}
+			else
+			{
+				messageHtml += '<div class="message" style="text-align: left;"><p><i class="bi bi-robot"></i></p> ' + messages[i] + '</div>';
+			}
+		}
+		$('#message-container').html(messageHtml);
+	}
+
+	$(document).ready(function() {
+		$('#send-button').click(function(event) {
+			event.preventDefault();
+			var message = $('#message-input').val();
+			messages.push(message);
+			$('#message-input').val('');
+			displayMessages();
+		});
+	});
+
+	</script>
+	<div class="container">
+		<h1>ChatAnywhere</h1>
+		<p>Model: gpt-3.5-turbo</p>
+		<div id="message-container"></div>
+		<form>
+			<div class="form-group">
+				<label for="message-input">Prompt:</label>
+				<textarea class="form-control message-input" id="message-input" placeholder="Prompt here"></textarea>
+			</div>
+			<button type="submit" class="btn btn-primary" id="send-button">Send</button>		
+			<hr>	
+		</form>
 	</div>
-  </body>
+</body>
 </html>

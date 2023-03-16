@@ -71,14 +71,28 @@
 
 			// Create a new XMLHttpRequest object
 			var xhr = new XMLHttpRequest();
-			//xhr.open("POST", "https://chatanywhere.onrender.com/ChatAnywhere");
-			xhr.open("POST", "http://127.0.0.1:5000/ChatAnywhere");
+			xhr.open("POST", "https://chatanywhere.onrender.com/ChatAnywhere");
 			xhr.setRequestHeader("Content-Type", "application/json");
-			xhr.send(JSON.stringify(
-			{
-			"role": "user",
-			"content": message,
-			}));
+
+			let msgs = [];
+			for (var i = 0; i < messages.length; i++) {
+				let r = "assistant"
+				if(i % 2 == 0)
+				{
+					r = "user"
+				}
+
+				let msg = 
+				{
+					role: r,
+					content:  messages[i]
+				}
+				msgs.push(msg);
+			}
+
+			xhr.send(JSON.stringify(msgs));
+			$('#send-button').prop('disabled', true).html('Please wait');	
+			$("#send-button");		
 			xhr.onreadystatechange = function() 
 			{
 				if (xhr.readyState === 4 && xhr.status === 200) 
@@ -87,7 +101,17 @@
 					var reply = response.choices[0].message.content
 					messages.push(reply);
 					displayMessages();
+					
 				}
+				if(xhr.status === 500)
+				{
+					var response = JSON.parse(xhr.responseText);		
+					var reply = response.choices[0].message.content
+					alert(reply);
+					displayMessages();
+				}
+				$('#send-button').prop('disabled', false).html('Send');
+
 			}			
 		});
 	});
@@ -104,7 +128,7 @@
 				<textarea class="form-control message-input" id="message-input" placeholder="Prompt here"></textarea>
 			</div>
 			<div style="text-align: right;">
-				<button type="submit" class="btn btn-primary" id="send-button">Send</button>		
+				<button type="submit" class="btn btn-primary" id="send-button">Send</button>
 			</div>
 			<hr>	
 		</form>

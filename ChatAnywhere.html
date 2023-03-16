@@ -92,7 +92,6 @@
 
 			xhr.send(JSON.stringify(msgs));
 			$('#send-button').prop('disabled', true).html('Please wait');	
-			$("#send-button");		
 			xhr.onreadystatechange = function() 
 			{
 				if (xhr.readyState === 4 && xhr.status === 200) 

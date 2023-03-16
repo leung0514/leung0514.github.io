@@ -105,7 +105,7 @@
 					displayMessages();
 					$('#send-button').prop('disabled', false).html('Send');					
 				}
-				else if(xhr.status === 500)
+				else if(xhr.status === 500 || xhr.status === 502)
 				{
 					$('#send-button').prop('disabled', true).html('Error, please refresh.').attr("class","btn btn-warning");
 					displayMessages();

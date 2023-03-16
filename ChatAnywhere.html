@@ -72,7 +72,9 @@
 			// Create a new XMLHttpRequest object
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", "https://chatanywhere.onrender.com/api/ChatAnywhere");
+
 			xhr.setRequestHeader("Content-Type", "application/json");
+			xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
 
 			let msgs = [];
 			for (var i = 0; i < messages.length; i++) {
@@ -89,6 +91,7 @@
 				}
 				msgs.push(msg);
 			}
+			
 
 			xhr.send(JSON.stringify(msgs));
 			$('#send-button').prop('disabled', true).html('Please wait');	

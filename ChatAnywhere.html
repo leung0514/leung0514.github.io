@@ -72,6 +72,7 @@
 			// Create a new XMLHttpRequest object
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", "https://chatanywhere.onrender.com/ChatAnywhere");
+			//xhr.open("POST", "http://127.0.0.1:5000/ChatAnywhere");
 			xhr.setRequestHeader("Content-Type", "application/json");
 
 			let msgs = [];
@@ -100,14 +101,14 @@
 					var reply = response.choices[0].message.content
 					messages.push(reply);
 					displayMessages();
-					
+					$('#send-button').prop('disabled', false).html('Send');					
 				}
-				if(xhr.status === 500)
+				else if(xhr.status === 500)
 				{
-					alert("Error, please refresh.");
+					$('#send-button').prop('disabled', true).html('Error, please refresh.').attr("class","btn btn-warning");
 					displayMessages();
 				}
-				$('#send-button').prop('disabled', false).html('Send');
+				
 
 			}			
 		});

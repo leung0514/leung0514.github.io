@@ -23,30 +23,19 @@
 			margin-bottom: 10px;
 			white-space: pre-wrap;
 		}
-		button[type="submit"] {
-			background-color: #444444;
-			color: #FFFFFF;
-			border: none;
+		.message-input {
+			font-size: 16px;
 			border-radius: 5px;
 			padding: 10px;
 			margin-top: 10px;
-		}
-		.message-input {
-        font-size: 16px;
-        border-radius: 5px;
-        padding: 10px;
-        margin-top: 10px;
-        background-color: #444444;
-        color: #FFFFFF;
-        border: none;
-		resize: vertical;
+			background-color: #444444;
+			color: #FFFFFF;
+			border: none;
+			resize: vertical;
     	}
 		.message-input:focus {
-        outline: none;
+        	outline: none;
    	 	}
-		button[type="submit"]:focus {
-			outline: none;
-		}
 		.bi
 		{
 			font-size: 25px;
@@ -86,13 +75,16 @@
 	<div class="container">
 		<h1>ChatAnywhere</h1>
 		<p>Model: gpt-3.5-turbo</p>
+		<hr>
 		<div id="message-container"></div>
 		<form>
 			<div class="form-group">
 				<label for="message-input">Prompt:</label>
 				<textarea class="form-control message-input" id="message-input" placeholder="Prompt here"></textarea>
 			</div>
-			<button type="submit" class="btn btn-primary" id="send-button">Send</button>		
+			<div style="text-align: right;">
+				<button type="submit" class="btn btn-primary" id="send-button">Send</button>		
+			</div>
 			<hr>	
 		</form>
 	</div>

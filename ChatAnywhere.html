@@ -71,8 +71,7 @@
 
 			// Create a new XMLHttpRequest object
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", "https://chatanywhere.onrender.com/ChatAnywhere");
-			//xhr.open("POST", "http://127.0.0.1:5000/ChatAnywhere");
+			xhr.open("POST", "https://chatanywhere.onrender.com/api/ChatAnywhere");
 			xhr.setRequestHeader("Content-Type", "application/json");
 
 			let msgs = [];
@@ -98,7 +97,10 @@
 				if (xhr.readyState === 4 && xhr.status === 200) 
 				{
 					var response = JSON.parse(xhr.responseText);		
-					var reply = response.choices[0].message.content
+					var reply = response.choices[0].message.content			
+
+
+
 					messages.push(reply);
 					displayMessages();
 					$('#send-button').prop('disabled', false).html('Send');					

@@ -39,7 +39,24 @@
 		.bi
 		{
 			font-size: 25px;
-		}		
+		}	
+		pre 
+		{
+			background: #555;
+			border: 1px solid #ddd;
+			border-left: 3px solid #f36d33;
+			color: #fff;
+			page-break-inside: avoid;
+			font-family: monospace;
+			font-size: 15px;
+			line-height: 1.6;
+			margin-bottom: 1.6em;
+			max-width: 100%;
+			overflow: auto;
+			padding: 1em 1.5em;
+			display: block;
+			word-wrap: break-word;
+		}
 	</style>
 </head>
 <body>
@@ -117,7 +134,7 @@
 		});
 	});
 	function wrapCodeTags(str) {
-	  return str.replace(/```([^`]+)```/g, '<code>$1</code>');
+	  return str.replace(/```([^`]+)```/g, '<pre><code>$1</code></pre>');
 	}
 	</script>
 	<div class="container">

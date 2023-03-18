@@ -9,33 +9,37 @@
 	<link rel="stylesheet"	href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/monokai-sublime.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 	<style>	
-		body {
-			background-color: #333333;
+		body 
+		{
+			background-color: #1E1E1E;
 			color: #FFFFFF;
 		}
-		.container {
-			background-color: #222222;
+		.container 
+		{
+			background-color: #1E1E1E;
 			border: none;
 		}
-		.message {
-			background-color: #444444;
-			color: #FFFFFF;
+		.message 
+		{
+			background-color: #444654;
+			color: #FFF;
 			border-radius: 5px;
 			padding: 10px;
 			margin-bottom: 10px;
 			white-space: pre-wrap;
 		}
-		.message-input {
-			font-size: 16px;
+		.message-input 
+		{
 			border-radius: 5px;
 			padding: 10px;
 			margin-top: 10px;
-			background-color: #444444;
-			color: #FFFFFF;
+			background-color: #444654;
+			color: #FFF;
 			border: none;
 			resize: vertical;
     	}
-		.message-input:focus {
+		.message-input:focus 
+		{
         	outline: none;
    	 	}
 		.bi
@@ -43,16 +47,21 @@
 			font-size: 25px;
 		}	
 		pre 
-		{
-			background: #444;
-			border: 0px;
-			white-space: pre-line;
+		{	
+			background-color: #343541;
+			color: #FFF;			
+			padding: 0;
+			border: none;
+			white-space: pre-wrap;
+			word-break: keep-all;
+			margin: 0;			
+			display: block;
 		}
 	</style>
 </head>
 <body>
 	<script>
-	var messages = [];
+	var messages = ["","```csharp\nConsole.WriteLine(test); Console.WriteLine(test); Console.WriteLine(test); Console.WriteLine(test); Console.WriteLine(test); Console.WriteLine(test); Console.WriteLine(test); \n```"];
 	function displayMessages() 
 	{	
 		var messageHtml = '';
@@ -126,8 +135,8 @@
 		});
 	});
 	function wrapCodeTags(str) {
-		const codeBlockRegex = /```(\w+)?\n([\s\S]*?)\n```/gm;
-		const codeBlockTemplate = '<pre><code class="$1">$2</code></pre>';
+		const codeBlockRegex = /```(.+)?\n([\s\S]*?)\n```/gm;
+		const codeBlockTemplate = '<pre><span> $1</span><code>$2</code></pre>';
 		return str.replace(codeBlockRegex, codeBlockTemplate);
 	}
 	</script>

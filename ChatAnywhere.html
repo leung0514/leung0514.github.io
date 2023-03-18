@@ -6,6 +6,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+	<link rel="stylesheet"	href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/monokai-sublime.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 	<style>	
 		body {
 			background-color: #333333;
@@ -42,20 +44,9 @@
 		}	
 		pre 
 		{
-			background: #555;
-			border: 1px solid #ddd;
-			border-left: 3px solid #f36d33;
-			color: #fff;
-			page-break-inside: avoid;
-			font-family: monospace;
-			font-size: 15px;
-			line-height: 1.6;
-			margin-bottom: 1.6em;
-			max-width: 100%;
-			overflow: auto;
-			padding: 1em 1.5em;
-			display: block;
-			word-wrap: break-word;
+			background: #444;
+			border: 0px;
+			white-space: pre-line;
 		}
 	</style>
 </head>
@@ -68,17 +59,20 @@
 		for (var i = 0; i < messages.length; i++) {
 			if(i % 2 == 0)
 			{
-				messageHtml += '<div class="message" style="text-align: right;"><p><i class="bi bi-emoji-sunglasses-fill"></i></p>' + messages[i] + '</div>';
+				messageHtml += '<div class="message"><p><i class="bi bi-emoji-sunglasses-fill"></i></p>' + messages[i] + '</div>';
 			}
 			else
 			{
-				messageHtml += '<div class="message" style="text-align: left;"><p><i class="bi bi-robot"></i></p> ' + wrapCodeTags(messages[i]) + '</div>';
+				messageHtml += '<div class="message"><p><i class="bi bi-robot"></i></p> ' + wrapCodeTags(messages[i]) + '</div>';
 			}
 		}
 		$('#message-container').html(messageHtml);
+		hljs.highlightAll();
 	}
 
 	$(document).ready(function() {
+		
+		displayMessages();
 		$('#send-button').click(function(event) {
 			event.preventDefault();
 			var message = $('#message-input').val();
@@ -132,7 +126,9 @@
 		});
 	});
 	function wrapCodeTags(str) {
-	  return str.replace(/```([^`]+)```/g, '<pre><code>$1</code></pre>');
+		const codeBlockRegex = /```(\w+)?\n([\s\S]*?)\n```/gm;
+		const codeBlockTemplate = '<pre><code class="$1">$2</code></pre>';
+		return str.replace(codeBlockRegex, codeBlockTemplate);
 	}
 	</script>
 	<div class="container">

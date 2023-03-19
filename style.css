@@ -3,18 +3,21 @@ body,
     background-color: #1E1E1E;
     color: #FFFFFF;
 }
-
 .message,
-.message-input {
-    background-color: #444654;
-    color: #FFF;
-    border-radius: 5px;
-    padding: 10px;
-    border: none;
-    margin-bottom: 10px;
-    white-space: pre-wrap;
+.message-input,
+.message-prompt {
+color: #FFF;
+border-radius: 5px;
+padding: 10px;
+border: none;
+margin-bottom: 10px;
+white-space: pre-wrap;
+background-color: #444654;
 }
-
+.message-prompt,
+.message-input {
+background-color: #444;
+}
 .message-input:focus {
     outline: none;
 }

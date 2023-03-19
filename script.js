@@ -12,9 +12,10 @@ const messages = [];
 		const getMessagesHtml = (messages) => {
 			return messages.map((message, index) => {
 				const icon = index % 2 === 0 ? '<i class="bi bi-emoji-sunglasses-fill"></i>' : '<i class="bi bi-robot"></i>';
+				const promptMsg = index % 2 === 0 ? 'message-prompt' : '';
 				message = escapeHtml(message);
 				const wrappedMessage = index % 2 !== 0 ? wrapCodeTags(message) : message;
-				return `<div class="message"><p>${icon}</p>${wrappedMessage}</div>`;
+				return `<div class="message ${promptMsg}"><p>${icon}</p>${wrappedMessage}</div>`;
 			}).join('');
 		};
 		const wrapCodeTags = (str) => {

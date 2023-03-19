@@ -1,0 +1,35 @@
+body,
+.container {
+    background-color: #1E1E1E;
+    color: #FFFFFF;
+}
+
+.message,
+.message-input {
+    background-color: #444654;
+    color: #FFF;
+    border-radius: 5px;
+    padding: 10px;
+    border: none;
+    margin-bottom: 10px;
+    white-space: pre-wrap;
+}
+
+.message-input:focus {
+    outline: none;
+}
+
+.bi {
+    font-size: 25px;
+}
+
+pre {
+    background-color: #343541;
+    color: #FFF;
+    padding: 0;
+    border: none;
+    white-space: pre-wrap;
+    word-break: keep-all;
+    margin: 0;
+    display: block;
+}

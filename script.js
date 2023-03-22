@@ -1,4 +1,4 @@
-const messages = [];
+const messages = ["test1","test2"];
 		const url = "https://chatanywhere-js.onrender.com/api/ChatAnywhereStream";
 
 		const escapeHtml = (unsafe) => {
@@ -15,7 +15,7 @@ const messages = [];
 				const promptMsg = index % 2 === 0 ? 'message-prompt' : '';
 				message = escapeHtml(message);
 				const wrappedMessage = index % 2 !== 0 ? wrapCodeTags(message) : message;
-				return `<div class="message ${promptMsg}"><p>${icon}</p>${wrappedMessage}</div>`;
+				return `<div class="message ${promptMsg}"><div class="message-top">${icon}<i class="bi bi-files"></i></div>${wrappedMessage}</div>`;
 			}).join('');
 		};
 		const wrapCodeTags = (str) => {
@@ -75,6 +75,7 @@ const messages = [];
 			fetchResponse(msgs);
 		};
 
+
 		$(document).ready(function () {
 			displayMessages(messages);
 			$('#send-button').click(function (event) {
@@ -85,4 +86,7 @@ const messages = [];
 				displayMessages(messages);
 				promptGPT(messages);
 			});
+			$(".bi-files").click(function(e){
+				console.log("test");
+			});	
 		});

@@ -14,6 +14,11 @@ margin-bottom: 10px;
 white-space: pre-wrap;
 background-color: #444654;
 }
+.message-top
+{
+    display: flex;
+    justify-content: space-between;
+}
 .message-prompt,
 .message-input {
 background-color: #444;
@@ -22,10 +27,16 @@ background-color: #444;
     outline: none;
 }
 
-.bi {
-    font-size: 25px;
+.bi{
+    font-size: 22px;
 }
-
+.bi-files{
+    font-size: 18px;
+}
+.bi-files:hover {
+    cursor: pointer;
+    color:#0275d8;
+}
 pre {
     background-color: #343541;
     color: #FFF;

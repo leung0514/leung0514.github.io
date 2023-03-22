@@ -9,6 +9,7 @@ const escapeHtml = (unsafe) => {
 		.replace(/"/g, "&quot;")
 		.replace(/'/g, "&#039;");
 }
+    .replace(/'/g, "&#039;");
 const getMessagesHtml = (messages) => {
 	return messages.map((message, index) => {
 		const icon = index % 2 === 0 ? '<i class="bi bi-emoji-sunglasses-fill"></i>' : '<i class="bi bi-robot"></i>';

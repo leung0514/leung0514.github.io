@@ -19,6 +19,7 @@ body,
 .message-top {
     display: flex;
     justify-content: space-between;
+    padding-right: 5px;
 }
 
 .message-prompt,
@@ -33,13 +34,15 @@ body,
 .bi {
     font-size: 22px;
 }
+
 .bi-code-square,
-.bi-code-square:hover,
 .bi-files,
+.bi-code-square:hover,
 .bi-files:hover {
     font-size: 18px;
     cursor: pointer;
 }
+
 .bi-code-square:hover,
 .bi-files:hover {
     color: #0275d8;

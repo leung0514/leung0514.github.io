@@ -1,15 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans&family=Noto+Sans+SC&family=Noto+Sans+TC&family=Roboto:wght@300&display=swap');
+
 body,
-.container {
+.container,
+textarea {
     background-color: #1E1E1E;
-    color: #FFFFFF; 
-    font-size:16px;
-    line-height:1.5;
-    tab-size:4;
+    color: #FFFFFF;
+    font-size: 16px;
+    line-height: 1.5;
+    tab-size: 4;
     font-family: 'Noto Sans', sans-serif;
     font-family: 'Noto Sans SC', sans-serif;
     font-family: 'Noto Sans TC', sans-serif;
-    font-family: 'Roboto', sans-serif;    
+    font-family: 'Roboto', sans-serif;
+}
+
+textarea {
+    resize: vertical;
+    box-shadow: none !important;
 }
 
 .message,
@@ -33,11 +40,6 @@ body,
 .message-prompt,
 .message-input {
     background-color: #444;
-}
-
-textarea {
-    resize: vertical;
-    box-shadow: none !important;
 }
 
 .message-input:focus {

@@ -42,14 +42,25 @@ const displayMessages = (messages) => {
   setupCopyEvents();
   hljs.highlightAll();
 };
+
+const copyEffect = (el) => {
+  const copyButton = $(el);
+  copyButton.css("color", "#64dd17");
+  setTimeout(function () {
+    copyButton.css("color", "");
+  }, 500);
+};
+
 const setupCopyEvents = () => {
   $(".bi-files").click(function () {
     var idx = $(".bi-files").index(this);
     navigator.clipboard.writeText(messages[idx]);
+    copyEffect(this);
   });
   $(".bi-code-square").click(function () {
     var code = $(this).parent().next("code").text();
     navigator.clipboard.writeText(code);
+    copyEffect(this);
   });
 };
 const fetchResponse = async (msgs) => {

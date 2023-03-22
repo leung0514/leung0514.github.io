@@ -1,4 +1,4 @@
-const messages = ["test1", "test2"];
+const messages = [];
 const url = "https://chatanywhere-js.onrender.com/api/ChatAnywhereStream";
 
 const escapeHtml = (unsafe) => {

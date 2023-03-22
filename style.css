@@ -27,6 +27,11 @@ body,
     background-color: #444;
 }
 
+textarea {
+    resize: vertical;
+    box-shadow: none !important;
+}
+
 .message-input:focus {
     outline: none;
 }

@@ -4,7 +4,7 @@ body,
 .container,
 textarea {
     background-color: #1E1E1E;
-    color: #FFFFFF;
+    color: #D1D5DB;
     font-size: 16px;
     line-height: 1.5;
     tab-size: 4;
@@ -22,7 +22,7 @@ textarea {
 .message,
 .message-input,
 .message-prompt {
-    color: #FFF;
+    color: #D1D5DB;
     border-radius: 5px;
     padding: 10px;
     border: none;
@@ -65,7 +65,7 @@ textarea {
 
 pre {
     background-color: #343541;
-    color: #FFF;
+    color:#FFF;
     padding: 0;
     border: none;
     white-space: pre-wrap;

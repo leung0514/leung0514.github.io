@@ -26,7 +26,7 @@ const getMessagesHtml = (messages) => {
 const wrapCodeTags = (str) => {
   const codeBlockRegex = /```(.+)?\n([\s\S]*?)\n```/gm;
   const codeBlockTemplate =
-    '<pre><div class="message-top"><span> $1</span><i class="bi bi-code-square"></i></div><code>$2</code></pre>';
+    '<pre><div class="message-top"><span> $1</span><i class="bi bi-file-earmark-code"></i></div><code>$2</code></pre>';
   return str.replaceAll(codeBlockRegex, codeBlockTemplate);
 };
 const createMessage = (content, role) => ({ role, content });

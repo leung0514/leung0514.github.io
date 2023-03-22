@@ -33,13 +33,14 @@ body,
 .bi {
     font-size: 22px;
 }
-
+.bi-code-square,
+.bi-code-square:hover,
 .bi-files,
 .bi-files:hover {
     font-size: 18px;
     cursor: pointer;
 }
-
+.bi-code-square:hover,
 .bi-files:hover {
     color: #0275d8;
 }

@@ -57,7 +57,7 @@ const setupCopyEvents = () => {
     navigator.clipboard.writeText(messages[idx]);
     copyEffect(this);
   });
-  $(".bi-code-square").click(function () {
+  $(".bi-file-earmark-code").click(function () {
     var code = $(this).parent().next("code").text();
     navigator.clipboard.writeText(code);
     copyEffect(this);

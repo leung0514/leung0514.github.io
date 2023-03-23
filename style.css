@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans&family=Noto+Sans+SC&family=Noto+Sans+TC&family=Roboto:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');
 
 body,
 .container,
@@ -8,7 +8,7 @@ textarea {
     font-size: 16px;
     line-height: 1.5;
     tab-size: 4;
-    font-family: 'Noto Sans', 'Noto Sans SC', 'Noto Sans TC', 'Roboto', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 textarea {

@@ -19,10 +19,22 @@
 		<p>Model: <a href="https://platform.openai.com/docs/guides/chat" target="_blank">gpt-3.5-turbo by OpenAI</a></p>
 		<hr>
 		<div id="message-container"></div>
-		<form>
+		<form>			
 			<div class="form-group">
-				<label for="message-input">Prompt:</label>
-				<textarea class="form-control message-input" id="message-input" placeholder="Prompt here"></textarea>
+				<div class="row">
+					<div class="col-sm-12">
+                        <button type="button" class="btn btn-link btn-xs" id="translate-en-button">Translate to English</button>
+                        <button type="button" class="btn btn-link btn-xs" id="translate-cn-button">Translate to Chinese</button>
+                        <button type="button" class="btn btn-link btn-xs" id="summarize-button">Summarize</button>
+						<button type="button" class="btn btn-link btn-xs" id="optimize-button">Code optimize</button>
+						<button type="button" class="btn btn-link btn-xs" id="grammar-button">Grammar check</button>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+					<textarea class="form-control message-input" id="message-input" placeholder="Prompt here"></textarea>
+					</div>
+				</div>
 			</div>
 			<div class="form-group text-right">
 				<button type="submit" class="btn btn-primary" id="send-button">Send</button>

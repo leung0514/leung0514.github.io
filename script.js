@@ -1,5 +1,6 @@
 const messages = [];
 const url = "https://chatanywhere-js.onrender.com/api/ChatAnywhereStream";
+const prePrompt = [];
 
 const escapeHtml = (unsafe) => {
   return unsafe
@@ -106,14 +107,75 @@ const promptGPT = (messages) => {
   fetchResponse(msgs);
 };
 
-$(document).ready(function () {
+
+const handleSendButtonClick = (event) => {
+  event.preventDefault();
+  const message = $("#message-input").val();
+  messages.push(message, "");
   displayMessages(messages);
-  $("#send-button").click(function (event) {
-    event.preventDefault();
-    const message = $("#message-input").val();
-    messages.push(message);
-    messages.push("");
-    displayMessages(messages);
-    promptGPT(messages);
+  promptGPT(messages);
+  clearPrePrompt();
+};
+
+const getPrePrompt = (transToEn, transToCn, summ, optimize, grammar) => {
+  const prePrompt = "Could you kindly assist me with ";
+  if (optimize) return `${prePrompt}simplify and optimize the code below? Please use code formatting (\`\`\`language) and let me know if it's already optimized.\n`;
+  if (grammar) return `${prePrompt}checking the grammar below?\n`;
+  if (transToEn && !transToCn && !summ) return `${prePrompt}translating below into English?\n`;
+  if (!transToEn && !transToCn && summ) return `${prePrompt}summarizing below?\n`;
+  if (transToEn && !transToCn && summ) return `${prePrompt}summarizing and translating below into English?\n`;
+  if (!transToEn && transToCn && !summ) return `${prePrompt}translating below into Chinese?\n`;
+  if (!transToEn && transToCn && summ) return `${prePrompt}summarizing and translating below into Chinese?\n`;
+  return "";
+};
+
+const clearPrePrompt = () => {
+  prePrompt.length = 0;
+  $("#translate-en-button, #translate-cn-button, #summarize-button, #optimize-button, #grammar-button")
+    .data("clicked", false)
+    .addClass("btn-link")
+    .removeClass("btn-success");
+};
+
+const toggleClicked = (button) => {
+  const clicked = !button.data("clicked");
+  button.data("clicked", clicked).toggleClass("btn-link", !clicked).toggleClass("btn-success", clicked);
+};
+
+const handleClick = (button1, button2, exclusiveButtons = []) => {
+  button2?.data("clicked", false).addClass("btn-link").removeClass("btn-success");
+  toggleClicked(button1);
+  exclusiveButtons.forEach(btn => {
+    if (btn !== button1.attr('id')) {
+      $(`${btn}`).data("clicked", false).addClass("btn-link").removeClass("btn-success");
+    }
+  });
+  handleHotkeyClick();
+};
+
+const handleHotkeyClick = () => {
+  const [transToEn, transToCn, summ, optimize, grammar] = ["#translate-en-button", "#translate-cn-button", "#summarize-button", "#optimize-button", "#grammar-button"].map(id => $(id).data("clicked") || false);
+  const pPrompt = getPrePrompt(transToEn, transToCn, summ, optimize, grammar);
+  const messageInput = $("#message-input");
+  const currentMessage = messageInput.val();
+  if (!prePrompt[0] || prePrompt[0] === '') {
+    prePrompt[1] = currentMessage;
+  }
+  prePrompt[0] = pPrompt;
+  messageInput.val(`${prePrompt[0]}${prePrompt[1]}`).trigger("change").focus();
+};
+
+$(document).ready(() => {
+  displayMessages(messages);
+  $("#send-button").click(handleSendButtonClick);
+  $("#translate-en-button").click(() => handleClick($("#translate-en-button"), $("#translate-cn-button"), ['#optimize-button', '#grammar-button']));
+  $("#translate-cn-button").click(() => handleClick($("#translate-cn-button"), $("#translate-en-button"), ['#optimize-button', '#grammar-button']));
+  $("#summarize-button").click(() => handleClick($("#summarize-button"), null, ['#optimize-button', '#grammar-button']));
+  $("#optimize-button").click(() => handleClick($("#optimize-button"), $("#grammar-button"), ['#translate-en-button', '#translate-cn-button', '#summarize-button']));
+  $("#grammar-button").click(() => handleClick($("#grammar-button"), $("#optimize-button"), ['#translate-en-button', '#translate-cn-button', '#summarize-button']));
+  $("#message-input").on('input change', function () {
+    const { scrollHeight } = this;
+    this.style.height = `${Math.min(scrollHeight, 500)}px`;
+    this.style.overflowY = (scrollHeight > 500) ? 'scroll' : 'hidden';
   });
 });

@@ -70,3 +70,13 @@ pre {
     margin: 0;
     display: block;
 }
+
+#send-button {
+    width: 250px;
+}
+
+@media only screen and (max-width: 300px) {
+    #send-button {
+        width: 100%;
+    }
+}

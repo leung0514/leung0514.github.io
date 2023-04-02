@@ -119,7 +119,7 @@ const handleSendButtonClick = (event) => {
 
 const getPrePrompt = (transToEn, transToCn, summ, optimize, grammar) => {
   const prePrompt = "Could you kindly assist me with ";
-  if (optimize) return `${prePrompt}simplify and optimize the code below? Please use code formatting (\`\`\`language) and let me know if it's already optimized.\n`;
+  if (optimize) return `${prePrompt}simplifying and optimizing the code below? Please use code formatting (\`\`\`language) and let me know if it already looks optimized.\n`;
   if (grammar) return `${prePrompt}checking the grammar below?\n`;
   if (transToEn && !transToCn && !summ) return `${prePrompt}translating below into English?\n`;
   if (!transToEn && !transToCn && summ) return `${prePrompt}summarizing below?\n`;

@@ -122,9 +122,9 @@ const getPrePrompt = (existingPrompt, transToEn, transToCn, summ, optimize, gram
   const end = `\n\`\`\`\n${existingPrompt}\n\`\`\``;
   switch (true) {
     case optimize && summ:
-      return `${start}simplifying and optimizing the code as much as possible? Please use code formatting (\`\`\`language), and provide a summary of the code at the end.${end}`;
+      return `${start}simplifying and optimizing the code as much as possible? Please use code formatting (\`\`\`language\`\`\`), and provide a summary of the code at the end.${end}`;
     case optimize:
-      return `${start}simplifying and optimizing the code as much as possible? Please use code formatting (\`\`\`language).${end}`;
+      return `${start}simplifying and optimizing the code as much as possible? Please use code formatting (\`\`\`language\`\`\`).${end}`;
     case grammar:
       return `${start}checking the grammar?${end}`;
     case transToEn && !transToCn && !summ:
@@ -174,17 +174,14 @@ const handleHotkeyClick = () => {
     "#optimize-button",
     "#grammar-button"
   ];
-  const [transToEn, transToCn, summ, optimize, grammar] = buttonIds.map(id => $(id).data("clicked") || false);
-  const messageInput = $("#message-input");
-  if (!prePrompt[0] || prePrompt[0] === '') {
-    prePrompt[1] = messageInput.val();
-  }
-  const pPrompt = getPrePrompt(prePrompt[1], transToEn, transToCn, summ, optimize, grammar);
-  prePrompt[0] = pPrompt;
-  const newValue = `${pPrompt}`;
-  messageInput.val(newValue).trigger("change");
-  messageInput[0].setSelectionRange(newValue.length - 4, newValue.length - 4);
-  messageInput.focus();
+  const [tEn, tCn, sum, opt, gram] = buttonIds.map(id => $(id).data("clicked") || false);
+  const msgInput = $("#message-input");
+  if (!prePrompt[0] || prePrompt[0] === '') prePrompt[1] = msgInput.val();
+  const newVal = getPrePrompt(prePrompt[1], tEn, tCn, sum, opt, gram);
+  prePrompt[0] = newVal;
+  msgInput.val(newVal).trigger("change");
+  msgInput[0].setSelectionRange(newVal.length - 4, newVal.length - 4);
+  msgInput.focus();
 };
 
 $(document).ready(() => {

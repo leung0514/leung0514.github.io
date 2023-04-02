@@ -63,7 +63,7 @@ textarea {
 
 pre {
     background-color: #343541;
-    color:#FFF;
+    color: #FFF;
     padding: 0;
     border: none;
     white-space: pre-wrap;
@@ -80,4 +80,31 @@ pre {
     #send-button {
         width: 100%;
     }
+}
+
+/* Firefox */
+* {
+    scrollbar-width: auto;
+    scrollbar-color: #D1D5DB #444;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #444;
+    border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #D1D5DB;
+    border-radius: 10px;
+    border: 0px none #444;
+    
+}
+
+*::-webkit-scrollbar-corner {
+    background-color: #444;
 }

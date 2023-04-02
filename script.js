@@ -117,25 +117,26 @@ const handleSendButtonClick = (event) => {
   clearPrePrompt();
 };
 
-const getPrePrompt = (transToEn, transToCn, summ, optimize, grammar) => {
-  const prePrompt = "Could you kindly assist me with ";
+const getPrePrompt = (existingPrompt, transToEn, transToCn, summ, optimize, grammar) => {
+  const start = "Could you kindly assist me with ";
+  const end = `\n\`\`\`\n${existingPrompt}\n\`\`\``;
   switch (true) {
     case optimize && summ:
-      return `${prePrompt}simplifying and optimizing the code as much as possible? Please use code formatting (\`\`\`language), and provide a summary of the code at the end.\n`;
+      return `${start}simplifying and optimizing the code as much as possible? Please use code formatting (\`\`\`language), and provide a summary of the code at the end.${end}`;
     case optimize:
-      return `${prePrompt}simplifying and optimizing the code as much as possible? Please use code formatting (\`\`\`language).\n`;
+      return `${start}simplifying and optimizing the code as much as possible? Please use code formatting (\`\`\`language).${end}`;
     case grammar:
-      return `${prePrompt}checking the grammar?\n`;
+      return `${start}checking the grammar?${end}`;
     case transToEn && !transToCn && !summ:
-      return `${prePrompt}translating into English?\n`;
+      return `${start}translating into English?${end}`;
     case !transToEn && !transToCn && summ:
-      return `${prePrompt}summarizing?\n`;
+      return `${start}summarizing?${end}`;
     case transToEn && !transToCn && summ:
-      return `${prePrompt}summarizing, and translating into English?\n`;
+      return `${start}summarizing, and translating into English?${end}`;
     case !transToEn && transToCn && !summ:
-      return `${prePrompt}translating into Chinese?\n`;
+      return `${start}translating into Chinese?${end}`;
     case !transToEn && transToCn && summ:
-      return `${prePrompt}summarizing, and translating into Chinese?\n`;
+      return `${start}summarizing, and translating into Chinese?${end}`;
     default:
       return "";
   }
@@ -166,15 +167,24 @@ const handleClick = (button1, button2, exclusiveButtons = []) => {
 };
 
 const handleHotkeyClick = () => {
-  const [transToEn, transToCn, summ, optimize, grammar] = ["#translate-en-button", "#translate-cn-button", "#summarize-button", "#optimize-button", "#grammar-button"].map(id => $(id).data("clicked") || false);
-  const pPrompt = getPrePrompt(transToEn, transToCn, summ, optimize, grammar);
+  const buttonIds = [
+    "#translate-en-button",
+    "#translate-cn-button",
+    "#summarize-button",
+    "#optimize-button",
+    "#grammar-button"
+  ];
+  const [transToEn, transToCn, summ, optimize, grammar] = buttonIds.map(id => $(id).data("clicked") || false);
   const messageInput = $("#message-input");
-  const currentMessage = messageInput.val();
   if (!prePrompt[0] || prePrompt[0] === '') {
-    prePrompt[1] = currentMessage;
+    prePrompt[1] = messageInput.val();
   }
+  const pPrompt = getPrePrompt(prePrompt[1], transToEn, transToCn, summ, optimize, grammar);
   prePrompt[0] = pPrompt;
-  messageInput.val(`${prePrompt[0]}${prePrompt[1]}`).trigger("change").focus();
+  const newValue = `${pPrompt}`;
+  messageInput.val(newValue).trigger("change");
+  messageInput[0].setSelectionRange(newValue.length - 4, newValue.length - 4);
+  messageInput.focus();
 };
 
 $(document).ready(() => {

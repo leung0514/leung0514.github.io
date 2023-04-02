@@ -119,15 +119,27 @@ const handleSendButtonClick = (event) => {
 
 const getPrePrompt = (transToEn, transToCn, summ, optimize, grammar) => {
   const prePrompt = "Could you kindly assist me with ";
-  if (optimize) return `${prePrompt}simplifying and optimizing the code below? Please use code formatting (\`\`\`language) and let me know if it already looks optimized.\n`;
-  if (grammar) return `${prePrompt}checking the grammar below?\n`;
-  if (transToEn && !transToCn && !summ) return `${prePrompt}translating below into English?\n`;
-  if (!transToEn && !transToCn && summ) return `${prePrompt}summarizing below?\n`;
-  if (transToEn && !transToCn && summ) return `${prePrompt}summarizing and translating below into English?\n`;
-  if (!transToEn && transToCn && !summ) return `${prePrompt}translating below into Chinese?\n`;
-  if (!transToEn && transToCn && summ) return `${prePrompt}summarizing and translating below into Chinese?\n`;
-  return "";
-};
+  switch (true) {
+    case optimize && summ:
+      return `${prePrompt}simplifying and optimizing the code as much as possible? Please use code formatting (\`\`\`language), and provide a summary of the code at the end.\n`;
+    case optimize:
+      return `${prePrompt}simplifying and optimizing the code as much as possible? Please use code formatting (\`\`\`language).\n`;
+    case grammar:
+      return `${prePrompt}checking the grammar?\n`;
+    case transToEn && !transToCn && !summ:
+      return `${prePrompt}translating into English?\n`;
+    case !transToEn && !transToCn && summ:
+      return `${prePrompt}summarizing?\n`;
+    case transToEn && !transToCn && summ:
+      return `${prePrompt}summarizing, and translating into English?\n`;
+    case !transToEn && transToCn && !summ:
+      return `${prePrompt}translating into Chinese?\n`;
+    case !transToEn && transToCn && summ:
+      return `${prePrompt}summarizing, and translating into Chinese?\n`;
+    default:
+      return "";
+  }
+}
 
 const clearPrePrompt = () => {
   prePrompt.length = 0;
@@ -170,8 +182,8 @@ $(document).ready(() => {
   $("#send-button").click(handleSendButtonClick);
   $("#translate-en-button").click(() => handleClick($("#translate-en-button"), $("#translate-cn-button"), ['#optimize-button', '#grammar-button']));
   $("#translate-cn-button").click(() => handleClick($("#translate-cn-button"), $("#translate-en-button"), ['#optimize-button', '#grammar-button']));
-  $("#summarize-button").click(() => handleClick($("#summarize-button"), null, ['#optimize-button', '#grammar-button']));
-  $("#optimize-button").click(() => handleClick($("#optimize-button"), $("#grammar-button"), ['#translate-en-button', '#translate-cn-button', '#summarize-button']));
+  $("#summarize-button").click(() => handleClick($("#summarize-button"), null, ['#grammar-button']));
+  $("#optimize-button").click(() => handleClick($("#optimize-button"), $("#grammar-button"), ['#translate-en-button', '#translate-cn-button']));
   $("#grammar-button").click(() => handleClick($("#grammar-button"), $("#optimize-button"), ['#translate-en-button', '#translate-cn-button', '#summarize-button']));
   $("#message-input").focus().on('input change', function () {
     const { scrollHeight } = this;

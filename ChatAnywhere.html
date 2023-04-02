@@ -1,45 +1,54 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>ChatAnywhere</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/monokai-sublime.min.css">
+	<link rel="stylesheet"
+		href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/monokai-sublime.min.css">
 	<link rel="stylesheet" href="style.css?v=7">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 	<script src="script.js?v=7"></script>
 </head>
+
 <body>
 	<div class="container">
-		<h1>ChatAnywhere</h1>
-		<p>Model: <a href="https://platform.openai.com/docs/guides/chat" target="_blank">gpt-3.5-turbo by OpenAI</a></p>
+		<h3> ChatAnywhere </h3>
+		<small>Model: <a href="https://platform.openai.com/docs/guides/chat" target="_blank">OpenAI
+				gpt-3.5-turbo</a></small>
+
 		<hr>
 		<div id="message-container"></div>
-		<form>			
+		<form>
 			<div class="form-group">
 				<div class="row">
 					<div class="col-sm-12">
-                        <button type="button" class="btn btn-link btn-xs" id="translate-en-button">Translate to English</button>
-                        <button type="button" class="btn btn-link btn-xs" id="translate-cn-button">Translate to Chinese</button>
-                        <button type="button" class="btn btn-link btn-xs" id="summarize-button">Summarize</button>
+						<button type="button" class="btn btn-link btn-xs" id="translate-en-button">Translate to
+							English</button>
+						<button type="button" class="btn btn-link btn-xs" id="translate-cn-button">Translate to
+							Chinese</button>
+						<button type="button" class="btn btn-link btn-xs" id="summarize-button">Summarize</button>
 						<button type="button" class="btn btn-link btn-xs" id="optimize-button">Code optimize</button>
 						<button type="button" class="btn btn-link btn-xs" id="grammar-button">Grammar check</button>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-sm-12">
-					<textarea class="form-control message-input" id="message-input" placeholder="Prompt here"></textarea>
+						<textarea class="form-control message-input" id="message-input"
+							placeholder="Prompt here"></textarea>
 					</div>
 				</div>
 			</div>
 			<div class="form-group text-right">
-				<button type="submit" class="btn btn-primary" id="send-button">Send</button>
+				<button type="submit" class="btn btn-primary btn-sm" id="send-button">Send</button>
 			</div>
 		</form>
 	</div>
 </body>
+
 </html>

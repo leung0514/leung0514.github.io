@@ -173,7 +173,7 @@ $(document).ready(() => {
   $("#summarize-button").click(() => handleClick($("#summarize-button"), null, ['#optimize-button', '#grammar-button']));
   $("#optimize-button").click(() => handleClick($("#optimize-button"), $("#grammar-button"), ['#translate-en-button', '#translate-cn-button', '#summarize-button']));
   $("#grammar-button").click(() => handleClick($("#grammar-button"), $("#optimize-button"), ['#translate-en-button', '#translate-cn-button', '#summarize-button']));
-  $("#message-input").on('input change', function () {
+  $("#message-input").focus().on('input change', function () {
     const { scrollHeight } = this;
     this.style.height = `${Math.min(scrollHeight, 500)}px`;
     this.style.overflowY = (scrollHeight > 500) ? 'scroll' : 'hidden';

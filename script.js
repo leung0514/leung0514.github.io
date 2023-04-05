@@ -191,9 +191,16 @@ const toggleTheme = () => {
   $("#theme-switch").toggleClass("bi-sun bi-moon");
   $("#code-" + currentTheme).prop("disabled", true);
   $("#code-" + newTheme).prop("disabled", false);
+  sessionStorage.setItem('theme', newTheme);
+}
+
+const loadTheme = () => {
+  var theme = sessionStorage.getItem('theme');
+  $("html").attr('data-theme', theme || "dark");
 }
 
 $(document).ready(() => {
+  loadTheme();
   displayMessages(messages);
   $('#theme-switch').click(toggleTheme);
   $("#send-button").click(handleSendButtonClick);

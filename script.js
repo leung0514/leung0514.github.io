@@ -15,7 +15,7 @@ const getMessagesHtml = (messages) => {
     .map((message, index) => {
       const icon =
         index % 2 === 0
-          ? '<i class="bi bi-emoji-sunglasses-fill"></i>'
+          ? '<i class="bi bi-emoji-sunglasses"></i>'
           : '<i class="bi bi-robot"></i>';
       const promptMsg = index % 2 === 0 ? "message-prompt" : "";
       message = escapeHtml(message);
@@ -184,8 +184,18 @@ const handleHotkeyClick = () => {
   msgInput.focus();
 };
 
+const toggleTheme = () => {
+  var currentTheme = $("html").attr('data-theme');
+  var newTheme = currentTheme === 'light' ? 'dark' : 'light';
+  $("html").attr('data-theme', newTheme);
+  $("#theme-switch").toggleClass("bi-sun bi-moon");
+  $("#code-" + currentTheme).prop("disabled", true);
+  $("#code-" + newTheme).prop("disabled", false);
+}
+
 $(document).ready(() => {
   displayMessages(messages);
+  $('#theme-switch').click(toggleTheme);
   $("#send-button").click(handleSendButtonClick);
   $("#translate-en-button").click(() => handleClick($("#translate-en-button"), $("#translate-cn-button"), ['#optimize-button', '#grammar-button']));
   $("#translate-cn-button").click(() => handleClick($("#translate-cn-button"), $("#translate-en-button"), ['#optimize-button', '#grammar-button']));

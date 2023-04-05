@@ -1,14 +1,48 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');
 
+html[data-theme='dark'] {
+    --background-color: #1E1E1F;
+    --text-color: #D1D5DB;
+    --message-bg-color: #444654;
+    --message-border-color: #444654;
+    --message-input-bg-color: #444;
+    --message-input-border-color: #444;
+    --pre-bg-color: #343541;
+    --pre-border-color: #343541;
+    --scrollbar-track-bg-color: #444;
+    --scrollbar-thumb-bg-color: #D1D5DB;
+    --scrollbar-corner-bg-color: #444;
+    --scrollbar-color: #D1D5DB #444;
+}
+
+html[data-theme='light'] {
+    --background-color: #E7E7E8;
+    --text-color: #334;
+    --message-bg-color: #F7F7F8;
+    --message-border-color: #ccc;
+    --message-input-bg-color: #F7F7F8;
+    --message-input-border-color: #ccc;
+    --pre-bg-color: #ccc;
+    --pre-border-color: #ccc;
+    --scrollbar-track-bg-color: #ccc;
+    --scrollbar-thumb-bg-color: #334;
+    --scrollbar-corner-bg-color: #ccc;
+    --scrollbar-color: #334 #ccc;
+}
+
 body,
 .container,
 textarea {
-    background-color: #1E1E1E;
-    color: #D1D5DB;
+    background-color: var(--background-color);
+    color: var(--text-color);
     font-size: 16px;
     line-height: 1.5;
     tab-size: 4;
     font-family: 'Roboto', sans-serif;
+}
+
+hr {
+    border-color: var(--text-color);
 }
 
 textarea {
@@ -20,12 +54,12 @@ textarea {
 .message,
 .message-input,
 .message-prompt {
-    color: #D1D5DB;
+    color: var(--text-color);
     border-radius: 5px;
     padding: 10px;
-    border: none;
+    background-color: var(--message-bg-color);
+    border: 1px solid var(--message-border-color);
     margin-bottom: 10px;
-    background-color: #444654;
     white-space: pre-wrap;
 }
 
@@ -37,20 +71,17 @@ textarea {
 
 .message-prompt,
 .message-input {
-    background-color: #444;
+    background-color: var(--message-input-bg-color);
+    border: 1px solid var(--message-input-border-color);
 }
 
 .message-input:focus {
     outline: none;
+    border: 1px solid var(--message-input-border-color);
 }
 
-.bi {
-    font-size: 22px;
-}
-
+.bi,
 .bi-file-earmark-code,
-.bi-files,
-.bi-file-earmark-code:hover,
 .bi-files:hover {
     font-size: 18px;
     cursor: pointer;
@@ -62,10 +93,10 @@ textarea {
 }
 
 pre {
-    background-color: #343541;
-    color: #FFF;
+    background-color: var(--pre-bg-color);
+    color: var(--text-color);
     padding: 0;
-    border: none;
+    border: 1px solid var(--pre-border-color);
     white-space: pre-wrap;
     word-break: keep-all;
     margin: 0;
@@ -82,29 +113,29 @@ pre {
     }
 }
 
-/* Firefox */
-* {
-    scrollbar-width: auto;
-    scrollbar-color: #D1D5DB #444;
-}
-
-/* Chrome, Edge, and Safari */
-*::-webkit-scrollbar {
+/* Scrollbar Styles */
+::-webkit-scrollbar {
     width: 10px;
 }
 
-*::-webkit-scrollbar-track {
-    background: #444;
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-bg-color);
     border-radius: 10px;
 }
 
-*::-webkit-scrollbar-thumb {
-    background-color: #D1D5DB;
+::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-bg-color);
     border-radius: 10px;
-    border: 0px none #444;
-    
+    border: 0px none var(--scrollbar-track-bg-color);
+
 }
 
-*::-webkit-scrollbar-corner {
-    background-color: #444;
+::-webkit-scrollbar-corner {
+    background-color: var(--scrollbar-corner-bg-color);
+}
+
+/* Firefox */
+* {
+    scrollbar-width: auto;
+    scrollbar-color: var(--scrollbar-color);
 }

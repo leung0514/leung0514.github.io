@@ -16,11 +16,11 @@ html[data-theme='dark'] {
 }
 
 html[data-theme='light'] {
-    --background-color: #E7E7E8;
+    --background-color: #E7E7E7;
     --text-color: #334;
-    --message-bg-color: #F7F7F8;
+    --message-bg-color: #F7F7F7;
     --message-border-color: #ccc;
-    --message-input-bg-color: #F7F7F8;
+    --message-input-bg-color: #F2F2F2;
     --message-input-border-color: #ccc;
     --pre-bg-color: #ccc;
     --pre-border-color: #ccc;
@@ -99,8 +99,9 @@ pre {
     border: 1px solid var(--pre-border-color);
     white-space: pre-wrap;
     word-break: keep-all;
-    margin: 0;
+	margin: 5px auto;
     display: block;
+	width: 95%;
 }
 
 #send-button {

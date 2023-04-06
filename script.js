@@ -196,13 +196,15 @@ const toggleTheme = () => {
 };
 
 const loadTheme = () => {
-  var theme = sessionStorage.getItem('theme')|| defaultTheme; 
-  if (theme === "light") {
-    $("#theme-switch").removeClass("bi-moon").addClass("bi-sun");
-  } else {
-    $("#theme-switch").removeClass("bi-sun").addClass("bi-moon");
-  }
-    $("html").attr('data-theme', theme);
+	var theme = sessionStorage.getItem('theme')|| defaultTheme; 
+	if (theme === "light") {
+		$("#theme-switch").removeClass("bi-moon").addClass("bi-sun");
+	} else {
+		$("#theme-switch").removeClass("bi-sun").addClass("bi-moon");
+	}
+	$("html").attr('data-theme', theme);
+	$("#code-light").prop("disabled", theme==="dark");
+	$("#code-dark").prop("disabled", theme==="light");
 };
 
 $(document).ready(() => {

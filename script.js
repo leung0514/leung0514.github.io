@@ -189,15 +189,20 @@ const toggleTheme = () => {
   var newTheme = currentTheme === 'light' ? 'dark' : 'light';
   $("html").attr('data-theme', newTheme);
   $("#theme-switch").toggleClass("bi-sun bi-moon");
-  $("#code-" + currentTheme).prop("disabled", true);
-  $("#code-" + newTheme).prop("disabled", false);
+  $("#code-light").prop("disabled", newTheme==="dark");
+  $("#code-dark").prop("disabled", newTheme==="light");
   sessionStorage.setItem('theme', newTheme);
-}
+};
 
 const loadTheme = () => {
-  var theme = sessionStorage.getItem('theme');
-  $("html").attr('data-theme', theme || "dark");
-}
+  var theme = sessionStorage.getItem('theme')|| "dark"; 
+  if (theme === "light") {
+    $("#theme-switch").removeClass("bi-moon").addClass("bi-sun");
+  } else {
+    $("#theme-switch").removeClass("bi-sun").addClass("bi-moon");
+  }
+    $("html").attr('data-theme', theme);
+};
 
 $(document).ready(() => {
   loadTheme();

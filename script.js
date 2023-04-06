@@ -1,6 +1,7 @@
 const messages = [];
 const url = "https://chatanywhere-js.onrender.com/api/ChatAnywhereStream";
 const prePrompt = [];
+const defaultTheme = "light";
 
 const escapeHtml = (unsafe) => {
   return unsafe
@@ -195,7 +196,7 @@ const toggleTheme = () => {
 };
 
 const loadTheme = () => {
-  var theme = sessionStorage.getItem('theme')|| "dark"; 
+  var theme = sessionStorage.getItem('theme')|| defaultTheme; 
   if (theme === "light") {
     $("#theme-switch").removeClass("bi-moon").addClass("bi-sun");
   } else {

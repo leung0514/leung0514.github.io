@@ -84,7 +84,8 @@ const fetchResponse = async (msgs) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(msgs),
   }).catch((error) => {
-    $("#send-button").html("Error").attr("class", "btn btn-danger");
+    $("#send-button").html("Send").attr("class", "btn btn-sm btn-primary");
+    alert(`Failed to fetch`);
     return;
   });
 
@@ -114,7 +115,7 @@ const fetchResponse = async (msgs) => {
 };
 const promptGPT = (messages) => {
   $("#message-input").val("");
-  $("#send-button").html("Stop").attr("class", "btn btn-sm btn-warning");
+  $("#send-button").html("Abort").attr("class", "btn btn-sm btn-warning");
   const msgs = generateMessages(messages);
   isAllowGetResponse = true;
   fetchResponse(msgs);
@@ -129,7 +130,7 @@ const handleSendButtonClick = (event) => {
     displayMessages(messages);
     promptGPT(messages);
     clearPrePrompt();
-  } else if (buttonAction == "Stop") {
+  } else if (buttonAction == "Abort") {
     isAllowGetResponse = false;
     $("#send-button").html("Send").attr("class", "btn btn-sm btn-primary");
   }

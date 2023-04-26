@@ -2,8 +2,9 @@ let completedMessages = 0;
 let isAllowGetResponse = false;
 const messages = [];
 const url = "https://chatanywhere-js.onrender.com/api/ChatAnywhereStream";
+//const url = "http://127.0.0.1:3000/api/ChatAnywhereStream";
 const prePrompt = [];
-const defaultTheme = "light";
+const defaultTheme = "dark";
 
 const escapeHtml = (unsafe) => {
   return unsafe
@@ -88,7 +89,7 @@ const fetchResponse = async (msgs) => {
     let chunk = decoder.decode(result.value);
     const arr = chunk.split("\n");
     arr.forEach((data) => {
-      if(!isAllowGetResponse) return;
+      if (!isAllowGetResponse) return;
       if (data.length === 0) return;
       if (data.startsWith(":")) return;
       if (data === "data: [DONE]") {
@@ -115,15 +116,18 @@ const promptGPT = (messages) => {
 
 const handleSendButtonClick = (event) => {
   event.preventDefault();
-
-  if ($(event.target).html() == "Send") {
+  const buttonAction = $(event.target).html();
+  if (buttonAction == "Send") {
     const message = $("#message-input").val();
     messages.push(message, "");
     completedMessages++;
     displayMessages(messages);
     promptGPT(messages);
     clearPrePrompt();
-  } else isAllowGetResponse = false;
+  } else if (buttonAction == "Stop") {
+    isAllowGetResponse = false;
+    $("#send-button").html("Send").attr("class", "btn btn-sm btn-primary");
+  }
 };
 
 const getPrePrompt = (

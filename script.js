@@ -56,6 +56,13 @@ const copyEffect = (el) => {
   }, 500);
 };
 
+const setupEraseEvent = () => {
+  $(".bi-eraser-fill").click(() => {
+    messages.pop();
+    messages.pop();
+  });
+};
+
 const setupCopyEvents = () => {
   $(".bi-files").click(function () {
     var idx = $(".bi-files").index(this);
@@ -279,4 +286,5 @@ $(document).ready(() => {
       this.style.height = `${Math.min(scrollHeight, 500)}px`;
       this.style.overflowY = scrollHeight > 500 ? "scroll" : "hidden";
     });
+    setupEraseEvent();
 });

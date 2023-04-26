@@ -1,4 +1,5 @@
 let completedMessages = 0;
+let isAllowGetResponse = false;
 const messages = [];
 const url = "https://chatanywhere-js.onrender.com/api/ChatAnywhereStream";
 const prePrompt = [];
@@ -87,6 +88,7 @@ const fetchResponse = async (msgs) => {
     let chunk = decoder.decode(result.value);
     const arr = chunk.split("\n");
     arr.forEach((data) => {
+      if(!isAllowGetResponse) return;
       if (data.length === 0) return;
       if (data.startsWith(":")) return;
       if (data === "data: [DONE]") {
@@ -107,6 +109,7 @@ const promptGPT = (messages) => {
   $("#message-input").val("");
   $("#send-button").html("Stop").attr("class", "btn btn-sm btn-warning");
   const msgs = generateMessages(messages);
+  isAllowGetResponse = true;
   fetchResponse(msgs);
 };
 
@@ -120,7 +123,7 @@ const handleSendButtonClick = (event) => {
     displayMessages(messages);
     promptGPT(messages);
     clearPrePrompt();
-  }
+  } else isAllowGetResponse = false;
 };
 
 const getPrePrompt = (

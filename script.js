@@ -1,4 +1,3 @@
-let completedMessages = 0;
 let isAllowGetResponse = false;
 const messages = [];
 const url = "https://chatanywhere-js.onrender.com/api/ChatAnywhereStream";
@@ -57,12 +56,16 @@ const copyEffect = (el) => {
 };
 
 const setupEraseEvent = () => {
-  $(".bi-eraser-fill").click(() => {
-    messages.pop();
-    messages.pop();
+  $(".bi-eraser").click(() => {
+    if (messages.length % 2 === 0) {
+      messages.pop();
+      messages.pop();
+    } else {
+      messages.pop();
+    }
+    displayMessages(messages);
   });
 };
-
 const setupCopyEvents = () => {
   $(".bi-files").click(function () {
     var idx = $(".bi-files").index(this);
@@ -81,10 +84,7 @@ const fetchResponse = async (msgs) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(msgs),
   }).catch((error) => {
-    $("#send-button")
-      .prop("disabled", true)
-      .html("Error")
-      .attr("class", "btn btn-danger");
+    $("#send-button").html("Error").attr("class", "btn btn-danger");
     return;
   });
 
@@ -101,7 +101,6 @@ const fetchResponse = async (msgs) => {
       if (data.startsWith(":")) return;
       if (data === "data: [DONE]") {
         $("#send-button").html("Send").attr("class", "btn btn-sm btn-primary");
-        completedMessages++;
         return;
       }
       const jsonData = JSON.parse(data.substring(6));
@@ -127,7 +126,6 @@ const handleSendButtonClick = (event) => {
   if (buttonAction == "Send") {
     const message = $("#message-input").val();
     messages.push(message, "");
-    completedMessages++;
     displayMessages(messages);
     promptGPT(messages);
     clearPrePrompt();
@@ -286,5 +284,5 @@ $(document).ready(() => {
       this.style.height = `${Math.min(scrollHeight, 500)}px`;
       this.style.overflowY = scrollHeight > 500 ? "scroll" : "hidden";
     });
-    setupEraseEvent();
+  setupEraseEvent();
 });

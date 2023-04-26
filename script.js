@@ -74,7 +74,7 @@ const fetchResponse = async (msgs) => {
   }).catch((error) => {
     $("#send-button")
       .prop("disabled", true)
-      .html("Error, please refresh.")
+      .html("Error")
       .attr("class", "btn btn-danger");
     return;
   });
@@ -110,18 +110,27 @@ const promptGPT = (messages) => {
   fetchResponse(msgs);
 };
 
-
 const handleSendButtonClick = (event) => {
   event.preventDefault();
-  const message = $("#message-input").val();
-  messages.push(message, "");
-  completedMessages++;
-  displayMessages(messages);
-  promptGPT(messages);
-  clearPrePrompt();
+
+  if ($(event.target).html() == "Send") {
+    const message = $("#message-input").val();
+    messages.push(message, "");
+    completedMessages++;
+    displayMessages(messages);
+    promptGPT(messages);
+    clearPrePrompt();
+  }
 };
 
-const getPrePrompt = (existingPrompt, transToEn, transToCn, summ, optimize, grammar) => {
+const getPrePrompt = (
+  existingPrompt,
+  transToEn,
+  transToCn,
+  summ,
+  optimize,
+  grammar
+) => {
   const start = "Could you kindly assist me with ";
   const end = `\n\`\`\`\n${existingPrompt}\n\`\`\``;
   switch (true) {
@@ -144,11 +153,13 @@ const getPrePrompt = (existingPrompt, transToEn, transToCn, summ, optimize, gram
     default:
       return "";
   }
-}
+};
 
 const clearPrePrompt = () => {
   prePrompt.length = 0;
-  $("#translate-en-button, #translate-cn-button, #summarize-button, #optimize-button, #grammar-button")
+  $(
+    "#translate-en-button, #translate-cn-button, #summarize-button, #optimize-button, #grammar-button"
+  )
     .data("clicked", false)
     .addClass("btn-link")
     .removeClass("btn-success");
@@ -156,15 +167,24 @@ const clearPrePrompt = () => {
 
 const toggleClicked = (button) => {
   const clicked = !button.data("clicked");
-  button.data("clicked", clicked).toggleClass("btn-link", !clicked).toggleClass("btn-success", clicked);
+  button
+    .data("clicked", clicked)
+    .toggleClass("btn-link", !clicked)
+    .toggleClass("btn-success", clicked);
 };
 
 const handleClick = (button1, button2, exclusiveButtons = []) => {
-  button2?.data("clicked", false).addClass("btn-link").removeClass("btn-success");
+  button2
+    ?.data("clicked", false)
+    .addClass("btn-link")
+    .removeClass("btn-success");
   toggleClicked(button1);
-  exclusiveButtons.forEach(btn => {
-    if (btn !== button1.attr('id')) {
-      $(`${btn}`).data("clicked", false).addClass("btn-link").removeClass("btn-success");
+  exclusiveButtons.forEach((btn) => {
+    if (btn !== button1.attr("id")) {
+      $(`${btn}`)
+        .data("clicked", false)
+        .addClass("btn-link")
+        .removeClass("btn-success");
     }
   });
   handleHotkeyClick();
@@ -176,11 +196,13 @@ const handleHotkeyClick = () => {
     "#translate-cn-button",
     "#summarize-button",
     "#optimize-button",
-    "#grammar-button"
+    "#grammar-button",
   ];
-  const [tEn, tCn, sum, opt, gram] = buttonIds.map(id => $(id).data("clicked") || false);
+  const [tEn, tCn, sum, opt, gram] = buttonIds.map(
+    (id) => $(id).data("clicked") || false
+  );
   const msgInput = $("#message-input");
-  if (!prePrompt[0] || prePrompt[0] === '') prePrompt[1] = msgInput.val();
+  if (!prePrompt[0] || prePrompt[0] === "") prePrompt[1] = msgInput.val();
   const newVal = getPrePrompt(prePrompt[1], tEn, tCn, sum, opt, gram);
   prePrompt[0] = newVal;
   msgInput.val(newVal).trigger("change");
@@ -189,40 +211,65 @@ const handleHotkeyClick = () => {
 };
 
 const toggleTheme = () => {
-  var currentTheme = $("html").attr('data-theme');
-  var newTheme = currentTheme === 'light' ? 'dark' : 'light';
-  $("html").attr('data-theme', newTheme);
+  var currentTheme = $("html").attr("data-theme");
+  var newTheme = currentTheme === "light" ? "dark" : "light";
+  $("html").attr("data-theme", newTheme);
   $("#theme-switch").toggleClass("bi-sun bi-moon");
-  $("#code-light").prop("disabled", newTheme==="dark");
-  $("#code-dark").prop("disabled", newTheme==="light");
-  sessionStorage.setItem('theme', newTheme);
+  $("#code-light").prop("disabled", newTheme === "dark");
+  $("#code-dark").prop("disabled", newTheme === "light");
+  sessionStorage.setItem("theme", newTheme);
 };
 
 const loadTheme = () => {
-	var theme = sessionStorage.getItem('theme')|| defaultTheme; 
-	if (theme === "light") {
-		$("#theme-switch").removeClass("bi-moon").addClass("bi-sun");
-	} else {
-		$("#theme-switch").removeClass("bi-sun").addClass("bi-moon");
-	}
-	$("html").attr('data-theme', theme);
-	$("#code-light").prop("disabled", theme==="dark");
-	$("#code-dark").prop("disabled", theme==="light");
+  var theme = sessionStorage.getItem("theme") || defaultTheme;
+  if (theme === "light") {
+    $("#theme-switch").removeClass("bi-moon").addClass("bi-sun");
+  } else {
+    $("#theme-switch").removeClass("bi-sun").addClass("bi-moon");
+  }
+  $("html").attr("data-theme", theme);
+  $("#code-light").prop("disabled", theme === "dark");
+  $("#code-dark").prop("disabled", theme === "light");
 };
 
 $(document).ready(() => {
   loadTheme();
   displayMessages(messages);
-  $('#theme-switch').click(toggleTheme);
+  $("#theme-switch").click(toggleTheme);
   $("#send-button").click(handleSendButtonClick);
-  $("#translate-en-button").click(() => handleClick($("#translate-en-button"), $("#translate-cn-button"), ['#optimize-button', '#grammar-button']));
-  $("#translate-cn-button").click(() => handleClick($("#translate-cn-button"), $("#translate-en-button"), ['#optimize-button', '#grammar-button']));
-  $("#summarize-button").click(() => handleClick($("#summarize-button"), null, ['#grammar-button']));
-  $("#optimize-button").click(() => handleClick($("#optimize-button"), $("#grammar-button"), ['#translate-en-button', '#translate-cn-button']));
-  $("#grammar-button").click(() => handleClick($("#grammar-button"), $("#optimize-button"), ['#translate-en-button', '#translate-cn-button', '#summarize-button']));
-  $("#message-input").focus().on('input change', function () {
-    const { scrollHeight } = this;
-    this.style.height = `${Math.min(scrollHeight, 500)}px`;
-    this.style.overflowY = (scrollHeight > 500) ? 'scroll' : 'hidden';
-  });
+  $("#translate-en-button").click(() =>
+    handleClick($("#translate-en-button"), $("#translate-cn-button"), [
+      "#optimize-button",
+      "#grammar-button",
+    ])
+  );
+  $("#translate-cn-button").click(() =>
+    handleClick($("#translate-cn-button"), $("#translate-en-button"), [
+      "#optimize-button",
+      "#grammar-button",
+    ])
+  );
+  $("#summarize-button").click(() =>
+    handleClick($("#summarize-button"), null, ["#grammar-button"])
+  );
+  $("#optimize-button").click(() =>
+    handleClick($("#optimize-button"), $("#grammar-button"), [
+      "#translate-en-button",
+      "#translate-cn-button",
+    ])
+  );
+  $("#grammar-button").click(() =>
+    handleClick($("#grammar-button"), $("#optimize-button"), [
+      "#translate-en-button",
+      "#translate-cn-button",
+      "#summarize-button",
+    ])
+  );
+  $("#message-input")
+    .focus()
+    .on("input change", function () {
+      const { scrollHeight } = this;
+      this.style.height = `${Math.min(scrollHeight, 500)}px`;
+      this.style.overflowY = scrollHeight > 500 ? "scroll" : "hidden";
+    });
 });

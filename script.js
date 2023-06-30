@@ -1,7 +1,7 @@
 let isAllowGetResponse = false;
 const messages = [];
-const url = "https://chatanywhere-js.onrender.com/api/ChatAnywhere";
-//const url = "http://127.0.0.1:3000/api/ChatAnywhere";
+const baseUrl = "https://chatanywhere-js.onrender.com/api/ChatAnywhere";
+//const baseUrl = "http://127.0.0.1:3000/api/ChatAnywhere";
 const prePrompt = [];
 const defaultTheme = "dark";
 
@@ -79,6 +79,10 @@ const setupCopyEvents = () => {
   });
 };
 const fetchResponse = async (msgs) => {
+
+  var urlParams = new URLSearchParams(window.location.search);
+  var modelName = urlParams.get('model');
+  const url = modelName !== null ? `${baseUrl}/${modelName}` : baseUrl;
   let res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

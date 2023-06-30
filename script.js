@@ -1,7 +1,7 @@
 let isAllowGetResponse = false;
 const messages = [];
-const url = "https://chatanywhere-js.onrender.com/api/ChatAnywhereStream";
-//const url = "http://127.0.0.1:3000/api/ChatAnywhereStream";
+const url = "https://chatanywhere-js.onrender.com/api/ChatAnywhere";
+//const url = "http://127.0.0.1:3000/api/ChatAnywhere";
 const prePrompt = [];
 const defaultTheme = "dark";
 

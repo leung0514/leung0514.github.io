@@ -79,42 +79,71 @@ const setupCopyEvents = () => {
   });
 };
 const fetchResponse = async (msgs) => {
-
   var urlParams = new URLSearchParams(window.location.search);
   var modelName = urlParams.get('model');
   const url = modelName !== null ? `${baseUrl}/${modelName}` : baseUrl;
-  let res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(msgs),
-  }).catch((error) => {
+  let res;
+  try {
+    res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(msgs),
+    });
+  } catch (error) {
     $("#send-button").html("Send").attr("class", "btn btn-sm btn-primary");
     alert(`Failed to fetch`);
     return;
-  });
+  }
 
   let reader = res.body.getReader();
   let result;
   let decoder = new TextDecoder("utf8");
-  while (!result?.done) {
-    result = await reader.read();
-    let chunk = decoder.decode(result.value);
-    const arr = chunk.split("\n");
+  let buffer = "";
+
+  while (!(result = await reader.read()).done) {
+    buffer += decoder.decode(result.value, { stream: true });
+    const arr = buffer.split("\n");
+    buffer = arr.pop(); // Keep the last incomplete chunk in the buffer
+
     arr.forEach((data) => {
       if (!isAllowGetResponse) return;
       if (data.length === 0) return;
       if (data.startsWith(":")) return;
-      const jsonData = JSON.parse(data);
+
+      try {
+        const jsonData = JSON.parse(data);
+        const delta = jsonData.choices[0].delta;
+        if (delta.content != null) {
+          messages[messages.length - 1] += delta.content;
+        }
+        if (jsonData.choices[0].finish_reason === "stop") {
+          $("#send-button").html("Send").attr("class", "btn btn-sm btn-primary");
+          displayMessages(messages);
+          return;
+        }
+      } catch (e) {
+        console.error("Error parsing JSON:", e);
+      }
+    });
+
+    // Update the UI less frequently
+    if (arr.length > 0) {
+      displayMessages(messages);
+    }
+  }
+
+  // Ensure the final message is displayed
+  if (buffer.length > 0) {
+    try {
+      const jsonData = JSON.parse(buffer);
       const delta = jsonData.choices[0].delta;
       if (delta.content != null) {
         messages[messages.length - 1] += delta.content;
       }
-      if (jsonData.choices[0].finish_reason === "stop") {
-        $("#send-button").html("Send").attr("class", "btn btn-sm btn-primary");
-        return;
-      }
       displayMessages(messages);
-    });
+    } catch (e) {
+      console.error("Error parsing final JSON:", e);
+    }
   }
 };
 const promptGPT = (messages) => {

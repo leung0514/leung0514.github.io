@@ -104,14 +104,14 @@ const fetchResponse = async (msgs) => {
       if (!isAllowGetResponse) return;
       if (data.length === 0) return;
       if (data.startsWith(":")) return;
-      if (data === "data: [DONE]") {
-        $("#send-button").html("Send").attr("class", "btn btn-sm btn-primary");
-        return;
-      }
-      const jsonData = JSON.parse(data.substring(6));
+      const jsonData = JSON.parse(data);
       const delta = jsonData.choices[0].delta;
       if (delta.content != null) {
         messages[messages.length - 1] += delta.content;
+      }
+      if (jsonData.choices[0].finish_reason === "stop") {
+        $("#send-button").html("Send").attr("class", "btn btn-sm btn-primary");
+        return;
       }
       displayMessages(messages);
     });

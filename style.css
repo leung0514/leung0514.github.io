@@ -44,7 +44,11 @@ textarea {
 hr {
     border-color: var(--text-color);
 }
-
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 textarea {
     resize: vertical;
     box-shadow: none !important;
@@ -61,12 +65,6 @@ textarea {
     border: 1px solid var(--message-border-color);
     margin-bottom: 10px;
     white-space: pre-wrap;
-}
-
-.message-top {
-    display: flex;
-    justify-content: space-between;
-    padding-right: 5px;
 }
 
 .message-prompt,

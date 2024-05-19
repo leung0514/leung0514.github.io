@@ -5,41 +5,38 @@ const baseUrl = "https://chatanywhere-js.onrender.com/api/ChatAnywhere";
 const prePrompt = [];
 const defaultTheme = "dark";
 
-const escapeHtml = (unsafe) => {
-  return unsafe
+const escapeHtml = (unsafe) =>
+  unsafe
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
-};
-const getMessagesHtml = (messages) => {
-  return messages
+
+const getMessagesHtml = (messages) =>
+  messages
     .map((message, index) => {
-      const icon =
-        index % 2 === 0
-          ? '<i class="bi bi-emoji-sunglasses"></i>'
-          : '<i class="bi bi-robot"></i>';
+      const icon = index % 2 === 0 ? "bi-emoji-sunglasses" : "bi-robot";
       const promptMsg = index % 2 === 0 ? "message-prompt" : "";
       message = escapeHtml(message);
       const wrappedMessage = index % 2 !== 0 ? wrapCodeTags(message) : message;
-      return `<div class="message ${promptMsg}"><div class="message-top">${icon}<i class="bi bi-files"></i></div>${wrappedMessage}</div>`;
+      return `<div class="message ${promptMsg}"><div class="message-top"><i class="bi ${icon}"></i><i class="bi bi-files"></i></div>${wrappedMessage}</div>`;
     })
     .join("");
-};
-const wrapCodeTags = (str) => {
-  const codeBlockRegex = /```(.+)?\n([\s\S]*?)\n```/gm;
-  const codeBlockTemplate =
-    '<pre><div class="message-top"><span> $1</span><i class="bi bi-file-earmark-code"></i></div><code>$2</code></pre>';
-  return str.replaceAll(codeBlockRegex, codeBlockTemplate);
-};
+
+const wrapCodeTags = (str) =>
+  str.replaceAll(
+    /```(.+)?\n([\s\S]*?)\n```/gm,
+    '<pre><div class="message-top"><span>$1</span><i class="bi bi-file-earmark-code"></i></div><code>$2</code></pre>'
+  );
+
 const createMessage = (content, role) => ({ role, content });
-const generateMessages = (messages) => {
-  return messages.map((message, index) => {
-    const role = index % 2 === 0 ? "user" : "assistant";
-    return createMessage(message, role);
-  });
-};
+
+const generateMessages = (messages) =>
+  messages.map((message, index) =>
+    createMessage(message, index % 2 === 0 ? "user" : "assistant")
+  );
+
 const displayMessages = (messages) => {
   const messageHtml = getMessagesHtml(messages);
   $("#message-container").html(messageHtml);
@@ -48,122 +45,104 @@ const displayMessages = (messages) => {
 };
 
 const copyEffect = (el) => {
-  const copyButton = $(el);
-  copyButton.css("color", "#64dd17");
-  setTimeout(function () {
-    copyButton.css("color", "");
-  }, 500);
+  $(el).css("color", "#64dd17");
+  setTimeout(() => $(el).css("color", ""), 500);
 };
 
 const setupEraseEvent = () => {
   $(".bi-eraser").click(() => {
-    if (messages.length % 2 === 0) {
-      messages.pop();
-      messages.pop();
-    } else {
-      messages.pop();
-    }
+    messages.length -= messages.length % 2 === 0 ? 2 : 1;
     displayMessages(messages);
   });
 };
+
 const setupCopyEvents = () => {
   $(".bi-files").click(function () {
-    var idx = $(".bi-files").index(this);
-    navigator.clipboard.writeText(messages[idx]);
+    navigator.clipboard.writeText(messages[$(".bi-files").index(this)]);
     copyEffect(this);
   });
   $(".bi-file-earmark-code").click(function () {
-    var code = $(this).parent().next("code").text();
-    navigator.clipboard.writeText(code);
+    navigator.clipboard.writeText($(this).parent().next("code").text());
     copyEffect(this);
   });
 };
+
 const fetchResponse = async (msgs) => {
-  var urlParams = new URLSearchParams(window.location.search);
-  var modelName = urlParams.get('model');
-  const url = modelName !== null ? `${baseUrl}/${modelName}` : baseUrl;
-  let res;
+  const urlParams = new URLSearchParams(window.location.search);
+  const modelName = urlParams.get('model');
+  const url = modelName ? `${baseUrl}/${modelName}` : baseUrl;
+
   try {
-    res = await fetch(url, {
+    const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(msgs),
     });
-  } catch (error) {
-    $("#send-button").html("Send").attr("class", "btn btn-sm btn-primary");
-    alert(`Failed to fetch`);
-    return;
-  }
 
-  let reader = res.body.getReader();
-  let result;
-  let decoder = new TextDecoder("utf8");
-  let buffer = "";
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder("utf8");
+    let buffer = "";
 
-  while (!(result = await reader.read()).done) {
-    buffer += decoder.decode(result.value, { stream: true });
-    const arr = buffer.split("\n");
-    buffer = arr.pop(); // Keep the last incomplete chunk in the buffer
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
 
-    arr.forEach((data) => {
-      if (!isAllowGetResponse) return;
-      if (data.length === 0) return;
-      if (data.startsWith(":")) return;
+      buffer += decoder.decode(value, { stream: true });
+      const arr = buffer.split("\n");
+      buffer = arr.pop();
 
+      arr.forEach((data) => {
+        if (!isAllowGetResponse || !data || data.startsWith(":")) return;
+
+        try {
+          const jsonData = JSON.parse(data);
+          const delta = jsonData.choices[0].delta;
+          if (delta.content) messages[messages.length - 1] += delta.content;
+          if (jsonData.choices[0].finish_reason === "stop") {
+            $("#send-button").html("Send").attr("class", "btn btn-sm btn-primary");
+            displayMessages(messages);
+            return;
+          }
+        } catch (e) {
+          console.error("Error parsing JSON:", e);
+        }
+      });
+
+      if (arr.length > 0) displayMessages(messages);
+    }
+
+    if (buffer) {
       try {
-        const jsonData = JSON.parse(data);
+        const jsonData = JSON.parse(buffer);
         const delta = jsonData.choices[0].delta;
-        if (delta.content != null) {
-          messages[messages.length - 1] += delta.content;
-        }
-        if (jsonData.choices[0].finish_reason === "stop") {
-          $("#send-button").html("Send").attr("class", "btn btn-sm btn-primary");
-          displayMessages(messages);
-          return;
-        }
+        if (delta.content) messages[messages.length - 1] += delta.content;
+        displayMessages(messages);
       } catch (e) {
-        console.error("Error parsing JSON:", e);
+        console.error("Error parsing final JSON:", e);
       }
-    });
-
-    // Update the UI less frequently
-    if (arr.length > 0) {
-      displayMessages(messages);
     }
-  }
-
-  // Ensure the final message is displayed
-  if (buffer.length > 0) {
-    try {
-      const jsonData = JSON.parse(buffer);
-      const delta = jsonData.choices[0].delta;
-      if (delta.content != null) {
-        messages[messages.length - 1] += delta.content;
-      }
-      displayMessages(messages);
-    } catch (e) {
-      console.error("Error parsing final JSON:", e);
-    }
+  } catch {
+    $("#send-button").html("Send").attr("class", "btn btn-sm btn-primary");
+    alert("Failed to fetch");
   }
 };
+
 const promptGPT = (messages) => {
   $("#message-input").val("");
   $("#send-button").html("Abort").attr("class", "btn btn-sm btn-warning");
-  const msgs = generateMessages(messages);
   isAllowGetResponse = true;
-  fetchResponse(msgs);
+  fetchResponse(generateMessages(messages));
 };
 
 const handleSendButtonClick = (event) => {
   event.preventDefault();
-  const buttonAction = $(event.target).html();
-  if (buttonAction == "Send") {
-    const message = $("#message-input").val();
-    messages.push(message, "");
+  const action = $(event.target).html();
+  if (action === "Send") {
+    messages.push($("#message-input").val(), "");
     displayMessages(messages);
     promptGPT(messages);
     clearPrePrompt();
-  } else if (buttonAction == "Abort") {
+  } else if (action === "Abort") {
     isAllowGetResponse = false;
     $("#send-button").html("Send").attr("class", "btn btn-sm btn-primary");
   }
@@ -179,26 +158,15 @@ const getPrePrompt = (
 ) => {
   const start = "Could you kindly assist me with ";
   const end = `\n\`\`\`\n${existingPrompt}\n\`\`\``;
-  switch (true) {
-    case optimize && summ:
-      return `${start}simplifying and optimizing the code as much as possible? Please use code formatting (\`\`\`language\`\`\`), and provide a summary of the code at the end.${end}`;
-    case optimize:
-      return `${start}simplifying and optimizing the code as much as possible? Please use code formatting (\`\`\`language\`\`\`).${end}`;
-    case grammar:
-      return `${start}checking the grammar?${end}`;
-    case transToEn && !transToCn && !summ:
-      return `${start}translating into English?${end}`;
-    case !transToEn && !transToCn && summ:
-      return `${start}summarizing?${end}`;
-    case transToEn && !transToCn && summ:
-      return `${start}summarizing, and translating into English?${end}`;
-    case !transToEn && transToCn && !summ:
-      return `${start}translating into Chinese?${end}`;
-    case !transToEn && transToCn && summ:
-      return `${start}summarizing, and translating into Chinese?${end}`;
-    default:
-      return "";
-  }
+  if (optimize && summ) return `${start}simplifying and optimizing the code as much as possible? Please use code formatting (\`\`\`language\`\`\`), and provide a summary of the code at the end.${end}`;
+  if (optimize) return `${start}simplifying and optimizing the code as much as possible? Please use code formatting (\`\`\`language\`\`\`).${end}`;
+  if (grammar) return `${start}checking the grammar?${end}`;
+  if (transToEn && !transToCn && !summ) return `${start}translating into English?${end}`;
+  if (!transToEn && !transToCn && summ) return `${start}summarizing?${end}`;
+  if (transToEn && !transToCn && summ) return `${start}summarizing, and translating into English?${end}`;
+  if (!transToEn && transToCn && !summ) return `${start}translating into Chinese?${end}`;
+  if (!transToEn && transToCn && summ) return `${start}summarizing, and translating into Chinese?${end}`;
+  return "";
 };
 
 const clearPrePrompt = () => {
@@ -220,17 +188,11 @@ const toggleClicked = (button) => {
 };
 
 const handleClick = (button1, button2, exclusiveButtons = []) => {
-  button2
-    ?.data("clicked", false)
-    .addClass("btn-link")
-    .removeClass("btn-success");
+  button2?.data("clicked", false).addClass("btn-link").removeClass("btn-success");
   toggleClicked(button1);
   exclusiveButtons.forEach((btn) => {
     if (btn !== button1.attr("id")) {
-      $(`${btn}`)
-        .data("clicked", false)
-        .addClass("btn-link")
-        .removeClass("btn-success");
+      $(btn).data("clicked", false).addClass("btn-link").removeClass("btn-success");
     }
   });
   handleHotkeyClick();
@@ -244,9 +206,7 @@ const handleHotkeyClick = () => {
     "#optimize-button",
     "#grammar-button",
   ];
-  const [tEn, tCn, sum, opt, gram] = buttonIds.map(
-    (id) => $(id).data("clicked") || false
-  );
+  const [tEn, tCn, sum, opt, gram] = buttonIds.map((id) => $(id).data("clicked") || false);
   const msgInput = $("#message-input");
   if (!prePrompt[0] || prePrompt[0] === "") prePrompt[1] = msgInput.val();
   const newVal = getPrePrompt(prePrompt[1], tEn, tCn, sum, opt, gram);
@@ -257,8 +217,8 @@ const handleHotkeyClick = () => {
 };
 
 const toggleTheme = () => {
-  var currentTheme = $("html").attr("data-theme");
-  var newTheme = currentTheme === "light" ? "dark" : "light";
+  const currentTheme = $("html").attr("data-theme");
+  const newTheme = currentTheme === "light" ? "dark" : "light";
   $("html").attr("data-theme", newTheme);
   $("#theme-switch").toggleClass("bi-sun bi-moon");
   $("#code-light").prop("disabled", newTheme === "dark");
@@ -267,12 +227,8 @@ const toggleTheme = () => {
 };
 
 const loadTheme = () => {
-  var theme = sessionStorage.getItem("theme") || defaultTheme;
-  if (theme === "light") {
-    $("#theme-switch").removeClass("bi-moon").addClass("bi-sun");
-  } else {
-    $("#theme-switch").removeClass("bi-sun").addClass("bi-moon");
-  }
+  const theme = sessionStorage.getItem("theme") || defaultTheme;
+  $("#theme-switch").toggleClass("bi-moon", theme === "light").toggleClass("bi-sun", theme === "dark");
   $("html").attr("data-theme", theme);
   $("#code-light").prop("disabled", theme === "dark");
   $("#code-dark").prop("disabled", theme === "light");
@@ -314,9 +270,8 @@ $(document).ready(() => {
   $("#message-input")
     .focus()
     .on("input change", function () {
-      const { scrollHeight } = this;
-      this.style.height = `${Math.min(scrollHeight, 500)}px`;
-      this.style.overflowY = scrollHeight > 500 ? "scroll" : "hidden";
+      this.style.height = `${Math.min(this.scrollHeight, 500)}px`;
+      this.style.overflowY = this.scrollHeight > 500 ? "scroll" : "hidden";
     });
   setupEraseEvent();
 });

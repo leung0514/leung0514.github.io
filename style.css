@@ -44,10 +44,11 @@ textarea {
 hr {
     border-color: var(--text-color);
 }
-.top {
+.message-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-right: 5px;
 }
 textarea {
     resize: vertical;

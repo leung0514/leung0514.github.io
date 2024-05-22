@@ -19,8 +19,10 @@ const getMessagesHtml = (messages) =>
       const icon = index % 2 === 0 ? "bi-emoji-sunglasses" : "bi-robot";
       const promptMsg = index % 2 === 0 ? "message-prompt" : "";
       message = escapeHtml(message);
-      const wrappedMessage = index % 2 !== 0 ? wrapCodeTags(message) : message;
-      return `<div class="message ${promptMsg}"><div class="message-top"><i class="bi ${icon}"></i><i class="bi bi-files"></i></div>${wrappedMessage}</div>`;
+      message = DOMPurify.sanitize(message); 
+      message = index % 2 !== 0 ? wrapCodeTags(message) : message;
+      message = index % 2 !== 0 ? marked.parse(message) : message;
+      return `<div class="message ${promptMsg}"><div class="message-top"><i class="bi ${icon}"></i><i class="bi bi-files"></i></div>${message}</div>`;
     })
     .join("");
 

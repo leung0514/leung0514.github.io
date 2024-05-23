@@ -4,33 +4,29 @@ const baseUrl = "https://chatanywhere-js.onrender.com/api/ChatAnywhere";
 //const baseUrl = "http://127.0.0.1:3000/api/ChatAnywhere";
 const prePrompt = [];
 const defaultTheme = "dark";
-
-const escapeHtml = (unsafe) =>
-  unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+const md = markdownit({
+  highlight: function (str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return `<pre><div class="message-top"><span>${lang}</span><i class="bi bi-file-earmark-code"></i></div><code class="hljs">` +
+               hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
+               '</code></pre>';
+      } catch (__) {}
+    }
+    return '<pre><div class="message-top"><span>code</span><i class="bi bi-file-earmark-code"></i></div><code class="hljs">' + md.utils.escapeHtml(str) + '</code></pre>';
+  }
+});
 
 const getMessagesHtml = (messages) =>
   messages
     .map((message, index) => {
       const icon = index % 2 === 0 ? "bi-emoji-sunglasses" : "bi-robot";
       const promptMsg = index % 2 === 0 ? "message-prompt" : "";
-      message = escapeHtml(message);
-      message = DOMPurify.sanitize(message); 
-      message = index % 2 !== 0 ? wrapCodeTags(message) : message;
-      message = index % 2 !== 0 ? marked.parse(message) : message;
-      return `<div class="message ${promptMsg}"><div class="message-top"><i class="bi ${icon}"></i><i class="bi bi-files"></i></div>${message}</div>`;
+      //message = escapeHtml(message);      
+      message = index % 2 !== 0 ? md.render(message) : message;      
+      return `<div class="message ${promptMsg}"><div class="message-top"><i class="bi ${icon}"></i><i class="bi bi-files"></i></div><div class="message-markdown">${message}</div></div>`;
     })
     .join("");
-
-const wrapCodeTags = (str) =>
-  str.replaceAll(
-    /```(.+)?\n([\s\S]*?)\n```/gm,
-    '<pre><div class="message-top"><span>$1</span><i class="bi bi-file-earmark-code"></i></div><code>$2</code></pre>'
-  );
 
 const createMessage = (content, role) => ({ role, content });
 
@@ -43,7 +39,6 @@ const displayMessages = (messages) => {
   const messageHtml = getMessagesHtml(messages);
   $("#message-container").html(messageHtml);
   setupCopyEvents();
-  hljs.highlightAll();
 };
 
 const copyEffect = (el) => {

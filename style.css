@@ -63,7 +63,6 @@ textarea {
     min-height: 100px;
 }
 .markdown-body {
-    padding: 16px;
     background-color: var(--message-bg-color);
     color: var(--text-color);
     font-size: var(--font-size);

@@ -5,6 +5,9 @@ const baseUrl = "https://chatanywhere-js.onrender.com/api/ChatAnywhere";
 const prePrompt = [];
 const defaultTheme = "dark";
 const md = markdownit({
+  html: true,
+  linkify: true,
+  typographer: true,
   highlight: function (str, lang) {
     if (lang && hljs.getLanguage(lang)) {
       try {
@@ -17,6 +20,9 @@ const md = markdownit({
   }
 });
 const mdUser = markdownit({
+  html: true,
+  linkify: true,
+  typographer: true,
   highlight: function (str, lang) {
     if (lang && hljs.getLanguage(lang)) {
       try {
@@ -33,10 +39,10 @@ const getMessagesHtml = (messages) =>
   messages
     .map((message, index) => {
       const icon = index % 2 === 0 ? "bi-emoji-sunglasses" : "bi-robot";
-      const promptMsg = index % 2 === 0 ? "message-prompt" : "";
-      //message = escapeHtml(message);      
+      const promptMsg = index % 2 === 0 ? "message-prompt" : "";    
+      const msgClass = index % 2 === 0 ? "" : "markdown-body";
       message = index % 2 !== 0 ? md.render(message) : mdUser.render(message);      
-      return `<div class="message ${promptMsg}"><div class="message-top"><i class="bi ${icon}"></i><i class="bi bi-files"></i></div><div class="message-markdown">${message}</div></div>`;
+      return `<div class="message ${promptMsg}"><div class="message-top"><i class="bi ${icon}"></i><i class="bi bi-files"></i></div><div class="${msgClass}">${message}</div></div>`;
     })
     .join("");
 
@@ -230,6 +236,8 @@ const toggleTheme = () => {
   const newTheme = currentTheme === "light" ? "dark" : "light";
   $("html").attr("data-theme", newTheme);
   $("#theme-switch").toggleClass("bi-sun bi-moon");
+  $("#md-light").prop("disabled", newTheme === "dark");
+  $("#md-dark").prop("disabled", newTheme === "light");
   $("#code-light").prop("disabled", newTheme === "dark");
   $("#code-dark").prop("disabled", newTheme === "light");
   sessionStorage.setItem("theme", newTheme);
@@ -239,6 +247,8 @@ const loadTheme = () => {
   const theme = sessionStorage.getItem("theme") || defaultTheme;
   $("#theme-switch").toggleClass("bi-moon", theme === "light").toggleClass("bi-sun", theme === "dark");
   $("html").attr("data-theme", theme);
+  $("#md-light").prop("disabled", theme === "dark");
+  $("#md-dark").prop("disabled", theme === "light");
   $("#code-light").prop("disabled", theme === "dark");
   $("#code-dark").prop("disabled", theme === "light");
 };

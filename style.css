@@ -1,19 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');
 
+
 html[data-theme='dark'] {
     --background-color: #1E1E1F;
     --text-color: #D1D5DB;
-    --message-bg-color: #444654;
-    --message-border-color: #444654;
-    --message-input-bg-color: #444;
-    --message-input-border-color: #444;
+    --message-bg-color: #2e2f38;
+    --message-border-color: #4e505f;
+    --message-input-bg-color: #4e505f;
+    --message-input-border-color: #4e505f;
     --pre-bg-color: #343541;
     --pre-border-color: #343541;
     --scrollbar-track-bg-color: #444;
     --scrollbar-thumb-bg-color: #D1D5DB;
     --scrollbar-corner-bg-color: #444;
     --scrollbar-color: #D1D5DB #444;
+    --font-size: 14px;
 }
+
+
 
 html[data-theme='light'] {
     --background-color: #E7E7E7;
@@ -28,16 +32,18 @@ html[data-theme='light'] {
     --scrollbar-thumb-bg-color: #334;
     --scrollbar-corner-bg-color: #ccc;
     --scrollbar-color: #334 #ccc;
+    --font-size: 14px;
 }
+
 
 body,
 .container,
 textarea {
     background-color: var(--background-color);
     color: var(--text-color);
-    font-size: 16px;
-    line-height: 1.5;
-    tab-size: 4;
+    font-size: var(--font-size);
+    line-height: 1;
+    tab-size: 2;
     font-family: 'Roboto', sans-serif;
 }
 
@@ -48,6 +54,7 @@ hr {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: var(--font-size);
     padding-right: 5px;
 }
 textarea {
@@ -55,7 +62,15 @@ textarea {
     box-shadow: none !important;
     min-height: 100px;
 }
-
+.markdown-body {
+    padding: 16px;
+    background-color: var(--message-bg-color);
+    color: var(--text-color);
+    font-size: var(--font-size);
+    line-height: 1.2;
+    tab-size: 4;
+    font-family: 'Roboto', sans-serif;
+}
 .message,
 .message-input,
 .message-prompt {
@@ -65,7 +80,6 @@ textarea {
     background-color: var(--message-bg-color);
     border: 1px solid var(--message-border-color);
     margin-bottom: 10px;
-    white-space: pre-wrap;
 }
 
 .message-prompt,

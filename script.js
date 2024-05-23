@@ -16,6 +16,18 @@ const md = markdownit({
     return '<pre><div class="message-top"><span>code</span><i class="bi bi-file-earmark-code"></i></div><code class="hljs">' + md.utils.escapeHtml(str) + '</code></pre>';
   }
 });
+const mdUser = markdownit({
+  highlight: function (str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return `<pre><code class="hljs">` +
+               hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
+               '</code></pre>';
+      } catch (__) {}
+    }
+    return '<pre><code class="hljs">' + mdUser.utils.escapeHtml(str) + '</code></pre>';
+  }
+});
 
 const getMessagesHtml = (messages) =>
   messages
@@ -23,7 +35,7 @@ const getMessagesHtml = (messages) =>
       const icon = index % 2 === 0 ? "bi-emoji-sunglasses" : "bi-robot";
       const promptMsg = index % 2 === 0 ? "message-prompt" : "";
       //message = escapeHtml(message);      
-      message = index % 2 !== 0 ? md.render(message) : message;      
+      message = index % 2 !== 0 ? md.render(message) : mdUser.render(message);      
       return `<div class="message ${promptMsg}"><div class="message-top"><i class="bi ${icon}"></i><i class="bi bi-files"></i></div><div class="message-markdown">${message}</div></div>`;
     })
     .join("");

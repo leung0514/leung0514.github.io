@@ -5,10 +5,9 @@ const baseUrl = "https://chatanywhere-js.onrender.com/api/ChatAnywhere";
 const prePrompt = [];
 const defaultTheme = "dark";
 const createMarkdownParser = (isUser = false) => {
-  return markdownit({
-    html: true,
-    linkify: true,
+  return markdownit({   
     typographer: true,
+    linkify: true,
     highlight: function (str, lang) {
       const icon = isUser ? "" : `<div class="message-top"><span>${lang || 'code'}</span><i class="bi bi-file-earmark-code"></i></div>`;
       if (lang && hljs.getLanguage(lang)) {

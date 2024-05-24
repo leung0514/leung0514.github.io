@@ -4,47 +4,33 @@ const baseUrl = "https://chatanywhere-js.onrender.com/api/ChatAnywhere";
 //const baseUrl = "http://127.0.0.1:3000/api/ChatAnywhere";
 const prePrompt = [];
 const defaultTheme = "dark";
-const md = markdownit({
-  html: true,
-  linkify: true,
-  typographer: true,
-  highlight: function (str, lang) {
-    if (lang && hljs.getLanguage(lang)) {
-      try {
-        return `<pre><div class="message-top"><span>${lang}</span><i class="bi bi-file-earmark-code"></i></div><code class="hljs">` +
-               hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
-               '</code></pre>';
-      } catch (__) {}
+const createMarkdownParser = (isUser = false) => {
+  return markdownit({
+    html: true,
+    linkify: true,
+    typographer: true,
+    highlight: function (str, lang) {
+      const icon = isUser ? "" : `<div class="message-top"><span>${lang || 'code'}</span><i class="bi bi-file-earmark-code"></i></div>`;
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          return `<pre>${icon}<code class="hljs">` + hljs.highlight(str, { language: lang, ignoreIllegals: true }).value + '</code></pre>';
+        } catch (__) {}
+      }
+      return `<pre>${icon}<code class="hljs">` + (isUser ? this : md).utils.escapeHtml(str) + '</code></pre>';
     }
-    return '<pre><div class="message-top"><span>code</span><i class="bi bi-file-earmark-code"></i></div><code class="hljs">' + md.utils.escapeHtml(str) + '</code></pre>';
-  }
-});
-const mdUser = markdownit({
-  html: true,
-  linkify: true,
-  typographer: true,
-  highlight: function (str, lang) {
-    if (lang && hljs.getLanguage(lang)) {
-      try {
-        return `<pre><code class="hljs">` +
-               hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
-               '</code></pre>';
-      } catch (__) {}
-    }
-    return '<pre><code class="hljs">' + mdUser.utils.escapeHtml(str) + '</code></pre>';
-  }
-});
-
+  });
+};
+const md = createMarkdownParser();
+const mdUser = createMarkdownParser(true);
 const getMessagesHtml = (messages) =>
-  messages
-    .map((message, index) => {
-      const icon = index % 2 === 0 ? "bi-emoji-sunglasses" : "bi-robot";
-      const promptMsg = index % 2 === 0 ? "message-prompt" : "";    
-      const msgClass = index % 2 === 0 ? "" : "markdown-body";
-      message = index % 2 !== 0 ? md.render(message) : mdUser.render(message);      
-      return `<div class="message ${promptMsg}"><div class="message-top"><i class="bi ${icon}"></i><i class="bi bi-files"></i></div><div class="${msgClass}">${message}</div></div>`;
-    })
-    .join("");
+  messages.map((message, index) => {
+    const isUser = index % 2 === 0;
+    const icon = isUser ? "bi-emoji-sunglasses" : "bi-robot";
+    const msgClass = isUser ? "" : "markdown-body";
+    const promptMsg = isUser ? "message-prompt" : "";
+    message = (isUser ? mdUser : md).render(message);
+    return `<div class="message ${promptMsg}"><div class="message-top"><i class="bi ${icon}"></i><i class="bi bi-files"></i></div><div class="${msgClass}">${message}</div></div>`;
+  }).join("");
 
 const createMessage = (content, role) => ({ role, content });
 

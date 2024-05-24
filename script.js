@@ -8,6 +8,7 @@ const createMarkdownParser = (isUser = false) => {
   return markdownit({   
     typographer: true,
     linkify: true,
+    breaks: true,
     highlight: function (str, lang) {
       const icon = isUser ? "" : `<div class="message-top"><span>${lang || 'code'}</span><i class="bi bi-file-earmark-code"></i></div>`;
       if (lang && hljs.getLanguage(lang)) {

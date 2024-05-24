@@ -16,7 +16,7 @@ const createMarkdownParser = (isUser = false) => {
           return `<pre>${icon}<code class="hljs">` + hljs.highlight(str, { language: lang, ignoreIllegals: true }).value + '</code></pre>';
         } catch (__) {}
       }
-      return `<pre>${icon}<code class="hljs">` + (isUser ? this : md).utils.escapeHtml(str) + '</code></pre>';
+      return `<pre>${icon}<code class="hljs">` + markdownit().utils.escapeHtml(str) + '</code></pre>';
     }
   });
 };

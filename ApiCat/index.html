@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApiCat - Simple API Tester</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ApiCat</h1>
+            <p>Simple API Testing Tool</p>
+            <button id="themeToggle" class="theme-toggle">Light</button>
+        </header>
+
+        <main>
+            <section class="request-section">
+                <div class="request-row">
+                    <select id="method">
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                    </select>
+                    <input type="text" id="url" placeholder="Enter API URL (e.g., https://api.example.com/data)">
+                    <button id="sendBtn">Send</button>
+                </div>
+
+                <div class="headers-section">
+                    <label for="headers">Headers (JSON)</label>
+                    <textarea id="headers" placeholder='{"Content-Type": "application/json"}'></textarea>
+                </div>
+
+                <div class="body-section" id="bodySection">
+                    <label for="body">Request Body (JSON)</label>
+                    <textarea id="body" placeholder='{"key": "value"}'></textarea>
+                </div>
+            </section>
+
+            <section class="response-section">
+                <div class="response-header">
+                    <h2>Response</h2>
+                    <div class="response-tabs">
+                        <button id="textTab" class="tab active">Text</button>
+                        <button id="jsonTab" class="tab">JSON</button>
+                    </div>
+                </div>
+                <div class="status-row">
+                    <span id="statusCode"></span>
+                </div>
+                <textarea id="response" readonly placeholder="Response will appear here..."></textarea>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
